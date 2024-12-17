@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 const HandleRoute = ({ children }: { children: React.ReactNode }) => {
   const { UserSlice, AuthSlice } = useStore();
   const route = useNavigate();
-
   const { mutate: refreshToken } = useRefreshToken();
 
   useEffect(() => {
@@ -22,10 +21,12 @@ const HandleRoute = ({ children }: { children: React.ReactNode }) => {
       AuthSlice.setRefreshToken(null);
     } else {
       const { access_token, refresh_token, user_id } = JSON.parse(data);
+      console.log(access_token);
       let decodedToken = jwtDecode(access_token);
       let currentDate = new Date();
       const isRemember = localStorage.getItem("rememberPassword") === "true";
       // JWT exp is in seconds
+
       if (decodedToken && decodedToken.exp) {
         if (decodedToken.exp * 1000 < currentDate.getTime()) {
           if (isRemember) {

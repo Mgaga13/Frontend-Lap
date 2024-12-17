@@ -65,15 +65,21 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className='px-4 py-3 hover:bg-gray-700 cursor-pointer flex items-center'>
-            <FaChartBar className='mr-3' />
-            <Link to='/dashboard/reports' className={`${!isOpen && "hidden"}`}>
-              Reports
+            <FaImage className='mr-3' />
+            <Link to='/dashboard/banners' className={`${!isOpen && "hidden"}`}>
+              Banners
             </Link>
           </li>
           <li className='px-4 py-3 hover:bg-gray-700 cursor-pointer flex items-center'>
             <FaImage className='mr-3' />
-            <Link to='/dashboard/banners' className={`${!isOpen && "hidden"}`}>
-              Banners
+            <Link to='/dashboard/type' className={`${!isOpen && "hidden"}`}>
+              Types
+            </Link>
+          </li>
+          <li className='px-4 py-3 hover:bg-gray-700 cursor-pointer flex items-center'>
+            <FaChartBar className='mr-3' />
+            <Link to='/dashboard/reports' className={`${!isOpen && "hidden"}`}>
+              Reports
             </Link>
           </li>
         </ul>

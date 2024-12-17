@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { ApiService } from "../../api/ApiClient";
 import { IStore, updateStore } from "../../../store";
 import { List } from "./commom";
+import { useDebounce } from "../../../components/hooks/useDebounce";
 
 interface LoginI {
   email: string;
@@ -151,15 +152,24 @@ export const useRefreshToken = () => {
 };
 export const useGetListUser = (params: List) => {
   const getListUserService = ApiService.createInstance();
-
+  const debouncedSearchText = useDebounce<string>(params.searchText, 500);
   return useQuery(
-    ["getListUser", params.page],
+    ["getListUser", params.page, debouncedSearchText],
     () => {
+      const queryParams: any = {
+        page: params.page,
+        limit: params.limit,
+      };
+
+      if (debouncedSearchText) {
+        queryParams.searchText = debouncedSearchText;
+      }
       return getListUserService.getListUser({
-        queryParams: { page: params.page },
+        queryParams,
       });
     },
     {
+      enabled: !!debouncedSearchText || debouncedSearchText === "",
       onSuccess: () => {
         // Xử lý thành công nếu cần thiết
       },
@@ -192,7 +202,6 @@ export const useRemoveUser = () => {
   const getVideoService = ApiService.createInstance();
   return useMutation(
     (id: any) => {
-      console.log(id);
       return getVideoService.deleteUser({
         pathParams: {
           id: id,
@@ -205,6 +214,25 @@ export const useRemoveUser = () => {
       },
       onError: (error: any) => {
         console.error("Error removing user:", error);
+      },
+    }
+  );
+};
+
+export const useEditUser = () => {
+  const getVideoService = ApiService.createInstance();
+  return useMutation(
+    (payload: any) => {
+      return getVideoService.editUser({
+        data: payload,
+      });
+    },
+    {
+      onSuccess: (data: any) => {
+        console.log("Edit successfully:", data);
+      },
+      onError: (error: any) => {
+        console.error("Error Edit user:", error);
       },
     }
   );

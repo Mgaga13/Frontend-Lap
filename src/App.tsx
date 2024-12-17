@@ -14,6 +14,7 @@ import SalesPage from "./components/Detail";
 import AuthForm from "./pages/Auth/AuthForm";
 import NotFound from "./components/NotFound";
 import AuthGuard from "./components/AuthGuard";
+import TypeAdmin from "./components/admin/Type-admin";
 function App() {
   return (
     <Routes>
@@ -28,6 +29,7 @@ function App() {
                 <Route path='/products' element={<ProductAdmin />} />
                 <Route path='/categories' element={<CategoryAdmin />} />
                 <Route path='/reports' element={<Statistics />} />
+                <Route path='/type' element={<TypeAdmin />} />
               </Routes>
             </AuthGuard>
           </AdminLayout>

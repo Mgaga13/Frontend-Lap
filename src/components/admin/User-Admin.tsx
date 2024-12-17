@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   useCreateUser,
+  useEditUser,
   useGetListUser,
   useRemoveUser,
 } from "../../services/react-query/query/user";
@@ -10,6 +11,7 @@ import DeleteConfirmation from "../../components/DeleteConfirmation";
 import Modal from "../../components/Modal";
 import { FiEdit2, FiSearch, FiTrash2 } from "react-icons/fi";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useDebounce } from "../hooks/useDebounce";
 interface FormData {
   email: string;
   role: string;
@@ -21,26 +23,26 @@ interface FormData {
 function UserAdmin() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
   const {
     data: listData,
     isLoading,
     refetch,
-  } = useGetListUser({ page, limit });
-  const {
-    mutate: createUser,
-    isSuccess: isSuccessCreate,
-    isLoading: loadingUser,
-  } = useCreateUser();
-  const {
-    mutate: removeUser,
-    data: videoData,
-    isSuccess: getSuccess,
-    isLoading: loadingRemove,
-  } = useRemoveUser();
+  } = useGetListUser({
+    page,
+    limit,
+    searchText: searchQuery,
+  });
+
+  const { mutate: createUser, isSuccess: isSuccessCreate } = useCreateUser();
+
+  const { mutate: editUser, isSuccess: isSuccessEdit } = useEditUser();
+
+  const { mutate: removeUser } = useRemoveUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<any>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+
   const [formData, setFormData] = useState<FormData>({
     email: "",
     role: "",
@@ -79,17 +81,19 @@ function UserAdmin() {
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formDataToSubmit = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value) formDataToSubmit.append(key, value as string | Blob);
+    });
     if (editingUserId) {
-      const formDataToSubmit = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value) formDataToSubmit.append(key, value as string | Blob);
+      editUser(formDataToSubmit, {
+        onSuccess: () => {
+          toast.success("User Edit successfully!");
+          resetForm();
+          setIsModalOpen(false);
+        },
       });
-      console.log(formData);
     } else {
-      const formDataToSubmit = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value) formDataToSubmit.append(key, value as string | Blob);
-      });
       createUser(formDataToSubmit, {
         onSuccess: () => {
           toast.success("User added successfully!");
@@ -101,7 +105,7 @@ function UserAdmin() {
   };
 
   useEffect(() => {
-    if (isSuccessCreate) {
+    if (isSuccessCreate || isSuccessEdit) {
       setFormData({
         email: "",
         role: "",
@@ -113,7 +117,7 @@ function UserAdmin() {
       refetch();
       setIsModalOpen(false);
     }
-  }, [isSuccessCreate]);
+  }, [isSuccessCreate, isSuccessEdit]);
 
   const handleEdit = (user: any) => {
     setFormData({ ...user, avatar: null }); // Reset avatar for re-upload
@@ -154,15 +158,19 @@ function UserAdmin() {
   };
 
   const handlePageChange = (newPage: number) => {
-    if (newPage > 0 && newPage <= listData?.meta.pageCount) {
+    if (newPage > 0 && newPage <= listData?.meta?.pageCount) {
       setPage(newPage);
     }
   };
-  if (isLoading) {
-    return <div>loading ....</div>;
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div>
+  //       <p>Loading...</p>
+  //     </div>
+  //   );
+  // }
   const pages = Array.from(
-    { length: listData.meta.pageCount },
+    { length: listData?.meta?.pageCount ?? 10 },
     (_, i) => i + 1
   );
   return (
@@ -285,52 +293,57 @@ function UserAdmin() {
             </button>
 
             <div className='hidden sm:flex space-x-2'>
-              {pages.map((pageNumber) => (
-                <button
-                  key={pageNumber}
-                  onClick={() => handlePageChange(pageNumber)}
-                  className={`px-4 py-2 rounded-md text-sm font-medium ${
-                    pageNumber === page
-                      ? "bg-blue-600 text-white"
-                      : "bg-white text-gray-700 hover:bg-gray-50"
-                  }`}
-                  aria-label={`Page ${pageNumber}`}
-                  aria-current={pageNumber === page ? "page" : undefined}
-                >
-                  {pageNumber}
-                </button>
-              ))}
-            </div>
+              {isLoading ? (
+                ""
+              ) : (
+                <>
+                  {pages.map((pageNumber) => (
+                    <button
+                      key={pageNumber}
+                      onClick={() => handlePageChange(pageNumber)}
+                      className={`px-4 py-2 rounded-md text-sm font-medium ${
+                        pageNumber === page
+                          ? "bg-blue-600 text-white"
+                          : "bg-white text-gray-700 hover:bg-gray-50"
+                      }`}
+                      aria-label={`Page ${pageNumber}`}
+                      aria-current={pageNumber === page ? "page" : undefined}
+                    >
+                      {pageNumber}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => handlePageChange(page + 1)}
+                    disabled={page === listData.meta.pageCount}
+                    className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
+                      page === listData.meta.pageCount
+                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        : "bg-white text-gray-700 hover:bg-gray-50"
+                    }`}
+                    aria-label='Next page'
+                  >
+                    <span className='mr-1'>Next</span>
+                    <FaChevronRight className='h-4 w-4' />
+                  </button>
 
-            <button
-              onClick={() => handlePageChange(page + 1)}
-              disabled={page === listData.meta.pageCount}
-              className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-                page === listData.meta.pageCount
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
-              aria-label='Next page'
-            >
-              <span className='mr-1'>Next</span>
-              <FaChevronRight className='h-4 w-4' />
-            </button>
+                  <button
+                    onClick={() => handlePageChange(listData.meta.pageCount)}
+                    disabled={page === listData.meta.pageCount}
+                    className={`px-3 py-2 rounded-md text-sm font-medium ${
+                      page === listData.meta.pageCount
+                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        : "bg-white text-gray-700 hover:bg-gray-50"
+                    }`}
+                    aria-label='Go to last page'
+                  >
+                    Last
+                  </button>
 
-            <button
-              onClick={() => handlePageChange(listData.meta.pageCount)}
-              disabled={page === listData.meta.pageCount}
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                page === listData.meta.pageCount
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
-              aria-label='Go to last page'
-            >
-              Last
-            </button>
-
-            <div className='text-sm text-gray-500 ml-4'>
-              Page {page} of {listData.meta.pageCount}
+                  <div className='flex items-center text-sm text-gray-500 ml-4'>
+                    Page {page} of {listData.meta.pageCount}
+                  </div>
+                </>
+              )}
             </div>
           </nav>
         </div>
@@ -346,7 +359,7 @@ function UserAdmin() {
             type='email'
             name='email'
             placeholder='Email'
-            value={formData.email}
+            value={formData?.email || ""}
             onChange={handleChange}
             className='p-2 border rounded'
             required
@@ -355,7 +368,7 @@ function UserAdmin() {
             type='text'
             name='role'
             placeholder='Role'
-            value={formData.role}
+            value={formData?.role || ""}
             onChange={handleChange}
             className='p-2 border rounded'
             required
@@ -373,23 +386,30 @@ function UserAdmin() {
             type='text'
             name='phone'
             placeholder='Phone'
-            value={formData.phone}
+            value={formData?.phone || ""}
             onChange={handleChange}
             className='p-2 border rounded'
             required
           />
-          <input
-            type='text'
-            name='password'
-            placeholder='Password'
-            value={formData.password}
-            onChange={handleChange}
-            className='p-2 border rounded'
-            required
-          />
+          {editingUserId ? (
+            ""
+          ) : (
+            <input
+              type='text'
+              name='password'
+              placeholder='Password'
+              value={formData?.password || ""}
+              onChange={handleChange}
+              className='p-2 border rounded'
+              required
+            />
+          )}
+
           {formData.avatar && (
             <img
-              src={URL.createObjectURL(formData.avatar)}
+              src={
+                URL.createObjectURL(formData.avatar) ?? "/default-avatar.jpg"
+              }
               alt='Avatar Preview'
               className='w-24 h-24 rounded-full mx-auto'
             />

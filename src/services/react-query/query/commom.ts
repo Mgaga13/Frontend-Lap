@@ -1,7 +1,7 @@
 type List = {
   page: number;
   limit: number;
-  searchText?: string;
+  searchText?: any;
 };
 
 export type { List };

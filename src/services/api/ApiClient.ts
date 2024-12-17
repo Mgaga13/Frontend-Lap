@@ -123,6 +123,14 @@ export class ApiService {
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
+  editUser = configApi({
+    path: "v1/users/update",
+    method: "POST",
+    headers: {
+      "Content-type": "multipart/form-data",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
   deleteUser = configApi({
     path: "v1/users",
     method: "DELETE",
@@ -149,7 +157,63 @@ export class ApiService {
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
+  getCreateCategory = configApi({
+    path: "v1/categories",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  getEditCategory = configApi({
+    path: "v1/categories/edit",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  deleteCategory = configApi({
+    path: "v1/categories",
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
 
+  // Type
+
+  getListType = configApi({
+    path: "v1/type",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  getCreateType = configApi({
+    path: "v1/type",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  getEditType = configApi({
+    path: "v1/type/edit",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  deleteType = configApi({
+    path: "v1/type",
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
   // Banner
   getListBanner = configApi({
     path: "v1/banner",

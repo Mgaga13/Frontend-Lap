@@ -1,26 +1,17 @@
 import React, { useEffect, useState } from "react";
-import {
-  useCreateUser,
-  useEditUser,
-  useGetListUser,
-  useRemoveUser,
-} from "../../services/react-query/query/user";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import DeleteConfirmation from "../../components/DeleteConfirmation";
-import Modal from "../../components/Modal";
+import DeleteConfirmation from "../DeleteConfirmation";
+import Modal from "../Modal";
 import { FiEdit2, FiSearch, FiTrash2 } from "react-icons/fi";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useDebounce } from "../hooks/useDebounce";
-interface FormData {
-  email: string;
-  role: string;
-  name: string;
-  avatar: File | null; // Either a File object or null
-  password: string;
-  phone: string;
-}
-function ProductAdmin() {
+import {
+  useCreateType,
+  useEditType,
+  useGetListType,
+  useRemoveType,
+} from "../../services/react-query/query/banner";
+function TypeAdmin() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,116 +20,81 @@ function ProductAdmin() {
     isLoading,
     isFetching,
     refetch,
-  } = useGetListUser({
+  } = useGetListType({
     page,
     limit,
     searchText: searchQuery,
   });
 
-  const { mutate: createUser, isSuccess: isSuccessCreate } = useCreateUser();
+  const { mutate: createType, isSuccess: isSuccessCreate } = useCreateType();
 
-  const { mutate: editUser, isSuccess: isSuccessEdit } = useEditUser();
+  const { mutate: editType, isSuccess: isSuccessEdit } = useEditType();
 
-  const {
-    mutate: removeUser,
-    data: videoData,
-    isSuccess: getSuccess,
-  } = useRemoveUser();
+  const { mutate: removeType, isSuccess: getSuccess } = useRemoveType();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<any>(null);
-
-  const [formData, setFormData] = useState<FormData>({
-    email: "",
-    role: "",
-    name: "",
-    avatar: null,
-    password: "",
-    phone: "",
-  });
+  const [name, setName] = useState("");
   const [editingUserId, setEditingUserId] = useState(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
-
-    if (name === "avatar" && files) {
-      const file = files[0];
-      if (file && file.size <= 2 * 1024 * 1024) {
-        // Max size: 2MB
-        setFormData({ ...formData, avatar: file });
-      } else {
-        toast.error("File is too large. Maximum size is 2MB.");
-      }
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
   const resetForm = () => {
-    setFormData({
-      email: "",
-      role: "",
-      name: "",
-      avatar: null,
-      password: "",
-      phone: "",
-    });
+    setName("");
     setEditingUserId(null);
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formDataToSubmit = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value) formDataToSubmit.append(key, value as string | Blob);
-    });
     if (editingUserId) {
-      editUser(formDataToSubmit, {
-        onSuccess: () => {
-          toast.success("User Edit successfully!");
-          resetForm();
-          setIsModalOpen(false);
-        },
-      });
+      editType(
+        { id: editingUserId, name: name },
+        {
+          onSuccess: () => {
+            toast.success("Category Edit successfully!");
+            resetForm();
+            setIsModalOpen(false);
+          },
+        }
+      );
     } else {
-      createUser(formDataToSubmit, {
-        onSuccess: () => {
-          toast.success("User added successfully!");
-          resetForm();
-          setIsModalOpen(false);
-        },
-      });
+      createType(
+        { name },
+        {
+          onSuccess: () => {
+            toast.success("Category added successfully!");
+            resetForm();
+            setIsModalOpen(false);
+          },
+        }
+      );
     }
   };
 
   useEffect(() => {
     if (isSuccessCreate || isSuccessEdit) {
-      setFormData({
-        email: "",
-        role: "",
-        name: "",
-        avatar: null,
-        phone: "",
-        password: "",
-      });
+      setName("");
       refetch();
       setIsModalOpen(false);
     }
   }, [isSuccessCreate, isSuccessEdit]);
 
-  const handleEdit = (user: any) => {
-    setFormData({ ...user, avatar: null }); // Reset avatar for re-upload
-    setEditingUserId(user.id);
+  useEffect(() => {
+    refetch();
+  }, [getSuccess]);
+
+  const handleEdit = (cate: any) => {
+    setName(cate.name);
+    setEditingUserId(cate.id);
     setIsModalOpen(true);
   };
 
-  const handleDelete = (user: any) => {
-    setUserToDelete(user);
+  const handleDelete = (cate: any) => {
+    setUserToDelete(cate);
     setIsDeleteConfirmOpen(true);
   };
 
   const confirmDelete = () => {
     if (userToDelete) {
       const { id } = userToDelete;
-      removeUser(id);
+      removeType(id);
       toast.success("Xóa thành công!");
       refetch();
       setIsDeleteConfirmOpen(false);
@@ -150,14 +106,7 @@ function ProductAdmin() {
   };
 
   const openModal = () => {
-    setFormData({
-      email: "",
-      role: "",
-      name: "",
-      avatar: null,
-      phone: "",
-      password: "",
-    });
+    setName("");
     setEditingUserId(null);
     setIsModalOpen(true);
   };
@@ -167,13 +116,6 @@ function ProductAdmin() {
       setPage(newPage);
     }
   };
-  // if (isLoading) {
-  //   return (
-  //     <div>
-  //       <p>Loading...</p>
-  //     </div>
-  //   );
-  // }
   const pages = Array.from(
     { length: listData?.meta?.pageCount ?? 10 },
     (_, i) => i + 1
@@ -184,51 +126,24 @@ function ProductAdmin() {
         <div className='bg-white rounded-lg shadow-lg p-6'>
           <div className='flex flex-col sm:flex-row justify-between items-center mb-6'>
             <h1 className='text-2xl font-bold text-gray-800 mb-4 sm:mb-0'>
-              Product Management
+              Type Management
             </h1>
             <button
               onClick={openModal}
               className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors'
             >
-              Add New Product
+              Add New Type
             </button>
           </div>
-
-          <div className='relative mb-6'>
-            <FiSearch className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400' />
-            <input
-              type='text'
-              placeholder='Search product...'
-              className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-
           <div className='overflow-x-auto'>
             <table className='min-w-full divide-y divide-gray-200'>
               <thead>
                 <tr>
                   <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Tên sản phẩm
+                    ID
                   </th>
                   <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Giá
-                  </th>
-                  <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Giá Cũ
-                  </th>
-                  <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Mô tả
-                  </th>
-                  <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Hình ảnh
-                  </th>
-                  <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Số lượng
-                  </th>
-                  <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Thông số kỹ thuật
+                    Name
                   </th>
                   <th className='px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Actions
@@ -236,37 +151,19 @@ function ProductAdmin() {
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
-                {listData?.datas.map((user: any) => (
-                  <tr key={user.id}>
-                    <td className='px-6 py-4 whitespace-nowrap'>
-                      <div className='flex items-center'>
-                        <img
-                          className='h-10 w-10 rounded-full object-cover'
-                          src={user.avatar}
-                          alt={user.name}
-                        />
-                        <div className='ml-4'>
-                          <div className='text-sm font-medium text-gray-900'>
-                            {user.name}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {user.email}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {user.role}
-                    </td>
+                {listData?.datas.map((cate: any) => (
+                  <tr key={cate.id}>
+                    <td className='px-6 py-4 whitespace-nowrap'>{cate.id}</td>
+                    <td className='px-6 py-4 whitespace-nowrap'>{cate.name}</td>
                     <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
                       <button
-                        onClick={() => handleEdit(user)}
+                        onClick={() => handleEdit(cate)}
                         className='text-blue-600 hover:text-blue-900 mr-4'
                       >
                         <FiEdit2 className='inline-block' />
                       </button>
                       <button
-                        onClick={() => handleDelete(user)}
+                        onClick={() => handleDelete(cate)}
                         className='text-red-600 hover:text-red-900'
                       >
                         <FiTrash2 className='inline-block' />
@@ -365,100 +262,39 @@ function ProductAdmin() {
           </nav>
         </div>
       </div>
-
       <Modal
-        title={editingUserId ? "Edit User" : "Add New User"}
+        title={editingUserId ? "Sủa kiểu" : "Tạo mới kiểu"}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       >
         <form onSubmit={handleSubmit} className='grid gap-4'>
           <input
-            type='email'
-            name='email'
-            placeholder='Email'
-            value={formData?.email || ""}
-            onChange={handleChange}
-            className='p-2 border rounded'
-            required
-          />
-          <input
-            type='text'
-            name='role'
-            placeholder='Role'
-            value={formData?.role || ""}
-            onChange={handleChange}
-            className='p-2 border rounded'
-            required
-          />
-          <input
             type='text'
             name='name'
             placeholder='Name'
-            value={formData.name}
-            onChange={handleChange}
+            onChange={(e) => setName(e.target.value)}
+            value={name}
             className='p-2 border rounded'
             required
           />
-          <input
-            type='text'
-            name='phone'
-            placeholder='Phone'
-            value={formData?.phone || ""}
-            onChange={handleChange}
-            className='p-2 border rounded'
-            required
-          />
-          {editingUserId ? (
-            ""
-          ) : (
-            <input
-              type='text'
-              name='password'
-              placeholder='Password'
-              value={formData?.password || ""}
-              onChange={handleChange}
-              className='p-2 border rounded'
-              required
-            />
-          )}
-
-          {formData.avatar && (
-            <img
-              src={
-                URL.createObjectURL(formData.avatar) ?? "/default-avatar.jpg"
-              }
-              alt='Avatar Preview'
-              className='w-24 h-24 rounded-full mx-auto'
-            />
-          )}
-          <input
-            type='file'
-            accept='image/*'
-            onChange={handleChange}
-            name='avatar'
-            className='p-2 border rounded'
-          />
-
           <button
             type='submit'
             className='p-2 bg-blue-500 text-white rounded hover:bg-blue-600'
           >
-            {editingUserId ? "Update" : "Add"} User
+            {editingUserId ? "Sửa" : "Tạo"}
           </button>
         </form>
       </Modal>
-
       {isDeleteConfirmOpen && (
         <DeleteConfirmation
-          message='Bạn có muốn xóa người dùng này không?'
+          message='Bạn có muốn xóa kiểu bàn phím này không?'
           onConfirm={confirmDelete}
           onCancel={cancelDelete}
         />
       )}
-
       <ToastContainer position='top-right' autoClose={5000} />
     </div>
   );
 }
 
-export default ProductAdmin;
+export default TypeAdmin;

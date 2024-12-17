@@ -38,7 +38,14 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </header>
 
         {/* Main Content */}
-        <main className='flex-grow bg-gray-100 p-4'>{children}</main>
+        <main
+          className='flex-grow bg-gray-100 p-4 overflow-y-scroll overflow-x-hidden'
+          style={{
+            height: "300px",
+          }}
+        >
+          {children}
+        </main>
       </div>
     </div>
   );
