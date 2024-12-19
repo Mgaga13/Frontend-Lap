@@ -33,7 +33,7 @@ export class ApiService {
     },
   });
   signup = configApi({
-    path: "v1/auth/register",
+    path: "v1/auth/sign-up",
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -141,9 +141,32 @@ export class ApiService {
   // product
   getListProduct = configApi({
     path: "v1/products/list",
-    method: "POST",
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  createProduct = configApi({
+    path: "v1/product",
+    method: "POST",
+    headers: {
+      "Content-type": "multipart/form-data",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  editProduct = configApi({
+    path: "v1/users/update",
+    method: "POST",
+    headers: {
+      "Content-type": "multipart/form-data",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  deleteProduct = configApi({
+    path: "v1/product",
+    method: "DELETE",
+    headers: {
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });

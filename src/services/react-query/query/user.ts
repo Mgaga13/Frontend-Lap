@@ -11,11 +11,7 @@ interface LoginI {
 }
 
 interface SignUpI {
-  country: string;
-  device_id: string;
-  app_type: string;
-  version?: string;
-  ref_code?: string;
+  name: string;
   email: string;
   password: string;
 }

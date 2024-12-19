@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useLogin } from "../../services/react-query/query/user";
+import { useLogin, useSignup } from "../../services/react-query/query/user";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../../store";
+import { jwtDecode } from "jwt-decode";
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
@@ -16,7 +17,7 @@ const AuthForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { isLoading, isError, mutate: login } = useLogin();
   const { UserSlice } = useStore();
-  // const { mutate: register, isLoading: loadingSignup } = useRegister();
+  const { mutate: register, isSuccess: registerSuc } = useSignup();
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -56,28 +57,41 @@ const AuthForm = () => {
     e.preventDefault();
 
     if (validateForm()) {
-      login({
-        email: formData.email,
-        password: formData.password,
-      });
-      // if (isLogin) {
-
-      // } else {
-      //   register({});
-      // }
+      if (isLogin) {
+        login({
+          email: formData.email,
+          password: formData.password,
+        });
+      } else {
+        register({
+          email: formData.email,
+          name: formData.name,
+          password: formData.password,
+        });
+      }
 
       // Add your authentication logic here
     }
   };
   useEffect(() => {
-    if (UserSlice.isSuccess) {
-      navigate("/");
+    if (UserSlice.isLoggedIn) {
+      const accessToken = localStorage.getItem("data") ?? "";
+      const decode = jwtDecode<any>(accessToken);
+      if (decode?.role !== "Admin") {
+        navigate("/");
+      } else {
+        navigate("/dashboard");
+      }
     }
-  }, [UserSlice.isSuccess]);
+  }, [UserSlice.isLoggedIn]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  console.log(registerSuc);
+  useEffect(() => {
+    setIsLogin(!isLogin);
+  }, [registerSuc]);
 
   return (
     <div className='min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8'>

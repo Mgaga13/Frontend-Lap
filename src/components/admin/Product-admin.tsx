@@ -11,16 +11,20 @@ import DeleteConfirmation from "../../components/DeleteConfirmation";
 import Modal from "../../components/Modal";
 import { FiEdit2, FiSearch, FiTrash2 } from "react-icons/fi";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useDebounce } from "../hooks/useDebounce";
+import { useGetListProduct } from "../../services/react-query/query/product";
+import { useNavigate } from "react-router-dom";
+
 interface FormData {
-  email: string;
-  role: string;
+  price: string;
+  oldprice: string;
   name: string;
-  avatar: File | null; // Either a File object or null
-  password: string;
-  phone: string;
+  image: File | null; // Either a File object or null
+  description: string;
+  specification: string;
+  quantity: string;
 }
 function ProductAdmin() {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,7 +33,7 @@ function ProductAdmin() {
     isLoading,
     isFetching,
     refetch,
-  } = useGetListUser({
+  } = useGetListProduct({
     page,
     limit,
     searchText: searchQuery,
@@ -49,12 +53,13 @@ function ProductAdmin() {
   const [userToDelete, setUserToDelete] = useState<any>(null);
 
   const [formData, setFormData] = useState<FormData>({
-    email: "",
-    role: "",
+    price: "",
+    oldprice: "",
     name: "",
-    avatar: null,
-    password: "",
-    phone: "",
+    image: null, // Either a File object or null
+    description: "",
+    specification: "",
+    quantity: "",
   });
   const [editingUserId, setEditingUserId] = useState(null);
 
@@ -65,7 +70,7 @@ function ProductAdmin() {
       const file = files[0];
       if (file && file.size <= 2 * 1024 * 1024) {
         // Max size: 2MB
-        setFormData({ ...formData, avatar: file });
+        setFormData({ ...formData, image: file });
       } else {
         toast.error("File is too large. Maximum size is 2MB.");
       }
@@ -75,12 +80,13 @@ function ProductAdmin() {
   };
   const resetForm = () => {
     setFormData({
-      email: "",
-      role: "",
+      price: "",
+      oldprice: "",
       name: "",
-      avatar: null,
-      password: "",
-      phone: "",
+      image: null, // Either a File object or null
+      description: "",
+      specification: "",
+      quantity: "",
     });
     setEditingUserId(null);
   };
@@ -112,12 +118,13 @@ function ProductAdmin() {
   useEffect(() => {
     if (isSuccessCreate || isSuccessEdit) {
       setFormData({
-        email: "",
-        role: "",
+        price: "",
+        oldprice: "",
         name: "",
-        avatar: null,
-        phone: "",
-        password: "",
+        image: null, // Either a File object or null
+        description: "",
+        specification: "",
+        quantity: "",
       });
       refetch();
       setIsModalOpen(false);
@@ -151,12 +158,13 @@ function ProductAdmin() {
 
   const openModal = () => {
     setFormData({
-      email: "",
-      role: "",
+      price: "",
+      oldprice: "",
       name: "",
-      avatar: null,
-      phone: "",
-      password: "",
+      image: null, // Either a File object or null
+      description: "",
+      specification: "",
+      quantity: "",
     });
     setEditingUserId(null);
     setIsModalOpen(true);
@@ -187,7 +195,7 @@ function ProductAdmin() {
               Product Management
             </h1>
             <button
-              onClick={openModal}
+              onClick={() => navigate("/dashboard/products/create-product")}
               className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors'
             >
               Add New Product
@@ -236,37 +244,38 @@ function ProductAdmin() {
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
-                {listData?.datas.map((user: any) => (
-                  <tr key={user.id}>
-                    <td className='px-6 py-4 whitespace-nowrap'>
-                      <div className='flex items-center'>
-                        <img
-                          className='h-10 w-10 rounded-full object-cover'
-                          src={user.avatar}
-                          alt={user.name}
-                        />
-                        <div className='ml-4'>
-                          <div className='text-sm font-medium text-gray-900'>
-                            {user.name}
-                          </div>
-                        </div>
-                      </div>
+                {listData?.datas.map((product: any) => (
+                  <tr key={product.id}>
+                    <td className='px-6 py-4  max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
+                      {product.name}
                     </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {user.email}
+                    <td className='px-6 py-4  max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
+                      {product.price}
                     </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                      {user.role}
+                    <td className='px-6 py-4  max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
+                      {product.oldprice}
                     </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
+                    <td className='px-6 py-4 max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
+                      {product.description}
+                    </td>
+                    <td className='px-6 py-4 max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
+                      {product.image}
+                    </td>
+                    <td className='px-6 py-4 max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
+                      {product.quantity}
+                    </td>
+                    <td className='px-6 py-4 max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
+                      {product.specification}
+                    </td>
+                    <td className='px-6 py-4 max-w-[200px] truncate whitespace-nowrap text-right text-sm font-medium'>
                       <button
-                        onClick={() => handleEdit(user)}
+                        onClick={() => handleEdit(product)}
                         className='text-blue-600 hover:text-blue-900 mr-4'
                       >
                         <FiEdit2 className='inline-block' />
                       </button>
                       <button
-                        onClick={() => handleDelete(user)}
+                        onClick={() => handleDelete(product)}
                         className='text-red-600 hover:text-red-900'
                       >
                         <FiTrash2 className='inline-block' />
@@ -365,89 +374,6 @@ function ProductAdmin() {
           </nav>
         </div>
       </div>
-
-      <Modal
-        title={editingUserId ? "Edit User" : "Add New User"}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      >
-        <form onSubmit={handleSubmit} className='grid gap-4'>
-          <input
-            type='email'
-            name='email'
-            placeholder='Email'
-            value={formData?.email || ""}
-            onChange={handleChange}
-            className='p-2 border rounded'
-            required
-          />
-          <input
-            type='text'
-            name='role'
-            placeholder='Role'
-            value={formData?.role || ""}
-            onChange={handleChange}
-            className='p-2 border rounded'
-            required
-          />
-          <input
-            type='text'
-            name='name'
-            placeholder='Name'
-            value={formData.name}
-            onChange={handleChange}
-            className='p-2 border rounded'
-            required
-          />
-          <input
-            type='text'
-            name='phone'
-            placeholder='Phone'
-            value={formData?.phone || ""}
-            onChange={handleChange}
-            className='p-2 border rounded'
-            required
-          />
-          {editingUserId ? (
-            ""
-          ) : (
-            <input
-              type='text'
-              name='password'
-              placeholder='Password'
-              value={formData?.password || ""}
-              onChange={handleChange}
-              className='p-2 border rounded'
-              required
-            />
-          )}
-
-          {formData.avatar && (
-            <img
-              src={
-                URL.createObjectURL(formData.avatar) ?? "/default-avatar.jpg"
-              }
-              alt='Avatar Preview'
-              className='w-24 h-24 rounded-full mx-auto'
-            />
-          )}
-          <input
-            type='file'
-            accept='image/*'
-            onChange={handleChange}
-            name='avatar'
-            className='p-2 border rounded'
-          />
-
-          <button
-            type='submit'
-            className='p-2 bg-blue-500 text-white rounded hover:bg-blue-600'
-          >
-            {editingUserId ? "Update" : "Add"} User
-          </button>
-        </form>
-      </Modal>
-
       {isDeleteConfirmOpen && (
         <DeleteConfirmation
           message='Bạn có muốn xóa người dùng này không?'

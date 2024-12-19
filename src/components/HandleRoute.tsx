@@ -16,12 +16,10 @@ const HandleRoute = ({ children }: { children: React.ReactNode }) => {
     if (!data) {
       console.log("no data");
       UserSlice.setIsLoggedIn(false);
-      // set token to null
       AuthSlice.setAccessToken(null);
       AuthSlice.setRefreshToken(null);
     } else {
       const { access_token, refresh_token, user_id } = JSON.parse(data);
-      console.log(access_token);
       let decodedToken = jwtDecode(access_token);
       let currentDate = new Date();
       const isRemember = localStorage.getItem("rememberPassword") === "true";

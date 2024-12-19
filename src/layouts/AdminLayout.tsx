@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { FaSignOutAlt, FaUserCircle } from "react-icons/fa";
+import { useStore } from "../store";
 
 const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { UserSlice, AuthSlice } = useStore();
   const handleLogout = () => {
-    console.log("User logged out");
+    UserSlice.setIsLoggedIn(false);
+    AuthSlice.setAccessToken(null);
+    AuthSlice.setRefreshToken(null);
+    localStorage.removeItem("data");
+    window.location.href = "/";
   };
 
   return (

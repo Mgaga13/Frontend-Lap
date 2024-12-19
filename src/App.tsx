@@ -1,5 +1,5 @@
 import "./App.css";
-import { Outlet, Route, Router, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import { Home } from "./pages/Client/Home";
 import ProductDetail from "./components/products/ProductDetail";
@@ -13,8 +13,8 @@ import Statistics from "./components/admin/Statistics";
 import SalesPage from "./components/Detail";
 import AuthForm from "./pages/Auth/AuthForm";
 import NotFound from "./components/NotFound";
-import AuthGuard from "./components/AuthGuard";
-import TypeAdmin from "./components/admin/Type-admin";
+import ProtectedRoute from "./components/ProtectedRoute";
+import CreateProducts from "./components/admin/Create-products";
 function App() {
   return (
     <Routes>
@@ -22,77 +22,39 @@ function App() {
       <Route
         path='/dashboard/*'
         element={
-          <AdminLayout>
-            <AuthGuard>
+          <ProtectedRoute>
+            <AdminLayout>
               <Routes>
-                <Route path='/users' element={<UserAdmin />} />
-                <Route path='/products' element={<ProductAdmin />} />
-                <Route path='/categories' element={<CategoryAdmin />} />
-                <Route path='/reports' element={<Statistics />} />
-                <Route path='/type' element={<TypeAdmin />} />
+                <Route path='users' element={<UserAdmin />} />
+                <Route path='products' element={<ProductAdmin />} />
+                <Route
+                  path='products/create-product'
+                  element={<CreateProducts />}
+                />
+                <Route path='categories' element={<CategoryAdmin />} />
+                <Route path='reports' element={<Statistics />} />
               </Routes>
-            </AuthGuard>
-          </AdminLayout>
+            </AdminLayout>
+          </ProtectedRoute>
         }
-      ></Route>
+      />
 
       {/* Public Routes */}
       <Route
         path='/'
         element={
           <Layout>
-            <AuthGuard>
-              <Routes>
-                <Route index element={<Home />} />
-                <Route path='cart' element={<Cart />} />
-                <Route path='product' element={<ProductDetail />} />
-                <Route path='test' element={<SalesPage />} />
-              </Routes>
-            </AuthGuard>
+            <Routes>
+              <Route index element={<Home />} />
+              <Route path='cart' element={<Cart />} />
+              <Route path='product' element={<ProductDetail />} />
+              <Route path='test' element={<SalesPage />} />
+            </Routes>
           </Layout>
         }
-      ></Route>
+      />
       <Route path='/sign-in' element={<AuthForm />} />
     </Routes>
-    // <Routes>
-    //   <Route
-    //     path='/dashboard/*'
-    //     element={
-    //       <AdminLayout>
-    //         <AuthGuard>
-    //           <Routes>
-    //             <Route path='/users' element={<UserAdmin />} />
-    //             <Route path='/products' element={<ProductAdmin />} />
-    //             <Route path='/categories' element={<CategoryAdmin />} />
-    //             <Route path='/reports' element={<Statistics />} />
-    //           </Routes>
-    //         </AuthGuard>
-    //       </AdminLayout>
-    //     }
-    //   />
-    //   <Route
-    //     path='/'
-    //     element={
-    //       <Layout>
-    //         <AuthGuard>
-    //           <Routes>
-    //             <Route index element={<Home />} />
-    //             <Route path='/cart' element={<Cart />} />
-    //             <Route path='/product' element={<ProductDetail />} />
-    //             <Route path='/test' element={<SalesPage />} />
-    //           </Routes>
-    //         </AuthGuard>
-    //       </Layout>
-    //     }
-    //   />
-    //   {/* <Route index element={<Home />} />
-    //     <Route path='/cart' element={<Cart />} />
-    //     <Route path='/product' element={<ProductDetail />} />
-    //     <Route path='/test' element={<SalesPage />}></Route> */}
-    //   <Route path='/sign-in' element={<AuthForm />} />
-    //   <Route path='/forget-password' element={<ForgetPassword />} />
-    //   <Route path='*' element={<NotFound />} />
-    // </Routes>
   );
 }
 
