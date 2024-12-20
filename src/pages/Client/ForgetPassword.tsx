@@ -1,65 +1,173 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { FiMail } from "react-icons/fi";
+import { RiLockPasswordLine } from "react-icons/ri";
+import { useForgetPassword } from "../../services/react-query/query/user";
 
-const ForgetPassword = () => {
+const ForgotPassword = () => {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+  const { mutate: forgetPasswrod } = useForgetPassword();
+  const validateEmail = (email: any) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (!validateEmail(email)) {
+      setMessage({
+        type: "error",
+        text: "Please enter a valid email address",
+      });
+      return;
+    }
+
+    setLoading(true);
+    setMessage({ type: "", text: "" });
+    forgetPasswrod(
+      {
+        email,
+      },
+      {
+        onError: () => {
+          setMessage({
+            type: "error",
+            text: "An error occurred. Please try again later.",
+          });
+          setLoading(false);
+        },
+        onSuccess: () => {
+          setMessage({
+            type: "success",
+            text: "If an account with that email exists, a reset link has been sent.",
+          });
+          setEmail("");
+          setLoading(false);
+        },
+      }
+    );
+    // Simulate API call
+    // try {
+    //   await new Promise((resolve) => setTimeout(resolve, 2000));
+    //   setMessage({
+    //     type: "success",
+    //     text: "If an account with that email exists, a reset link has been sent.",
+    //   });
+    //   setEmail("");
+    // } catch (error) {
+    //   setMessage({
+    //     type: "error",
+    //     text: "An error occurred. Please try again later.",
+    //   });
+    // } finally {
+    //   setLoading(false);
+    // }
+  };
+
   return (
-    <div id='content' role='main' className='w-full  max-w-md mx-auto p-6'>
-      <div className='mt-7 bg-white  rounded-xl shadow-lg  dark:border-gray-700 border-2 border-indigo-300'>
-        <div className='p-4 sm:p-7'>
-          <div className='text-center'>
-            <h1 className='block text-2xl font-bold text-blue-500'>
-              Forgot password?
-            </h1>
-            <p className='mt-2 text-sm text-gray-600 dark:text-gray-400'>
-              Remember your password?
-              <Link
-                className='text-blue-600 decoration-2 hover:underline font-medium'
-                to='sign-in'
-              >
-                Login here
-              </Link>
-            </p>
-          </div>
+    <div className='min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
+      <div className='sm:mx-auto sm:w-full sm:max-w-md'>
+        <div className='flex justify-center'>
+          <RiLockPasswordLine className='w-20 h-20 text-indigo-600' />
+        </div>
+        <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
+          Forgot your password?
+        </h2>
+        <p className='mt-2 text-center text-sm text-gray-600'>
+          Enter your email address and we'll send you a link to reset your
+          password.
+        </p>
+      </div>
 
-          <div className='mt-5'>
-            <form>
-              <div className='grid gap-y-4'>
-                <div>
-                  <label
-                    htmlFor='email'
-                    className='block text-sm font-bold ml-1 mb-2 dark:text-white'
-                  >
-                    Email address
-                  </label>
-                  <div className='relative'>
-                    <input
-                      type='email'
-                      id='email'
-                      name='email'
-                      className='py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm'
-                      required
-                      aria-describedby='email-error'
-                    />
-                  </div>
-                  <p
-                    className='hidden text-xs text-red-600 mt-2'
-                    id='email-error'
-                  >
-                    Please include a valid email address so we can get back to
-                    you
-                  </p>
+      <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
+        <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
+          <form className='space-y-6' onSubmit={handleSubmit}>
+            <div>
+              <label
+                htmlFor='email'
+                className='block text-sm font-medium text-gray-700'
+              >
+                Email address
+              </label>
+              <div className='mt-1 relative rounded-md shadow-sm'>
+                <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                  <FiMail className='h-5 w-5 text-gray-400' />
                 </div>
-                <button
-                  type='submit'
-                  className='w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out'
-                >
-                  Đặt lại mật khẩu
-                </button>
+                <input
+                  id='email'
+                  name='email'
+                  type='email'
+                  autoComplete='email'
+                  required
+                  className='appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
+                  placeholder='Enter your email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                />
               </div>
-            </form>
-          </div>
+            </div>
+
+            {message.text && (
+              <div
+                className={`rounded-md p-4 ${
+                  message.type === "success" ? "bg-green-50" : "bg-red-50"
+                }`}
+              >
+                <p
+                  className={`text-sm ${
+                    message.type === "success"
+                      ? "text-green-800"
+                      : "text-red-800"
+                  }`}
+                >
+                  {message.text}
+                </p>
+              </div>
+            )}
+
+            <div>
+              <button
+                type='submit'
+                disabled={loading}
+                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                  loading ? "opacity-75 cursor-not-allowed" : ""
+                }`}
+              >
+                {loading ? (
+                  <>
+                    <svg
+                      className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                    >
+                      <circle
+                        className='opacity-25'
+                        cx='12'
+                        cy='12'
+                        r='10'
+                        stroke='currentColor'
+                        strokeWidth='4'
+                      ></circle>
+                      <path
+                        className='opacity-75'
+                        fill='currentColor'
+                        d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+                      ></path>
+                    </svg>
+                    Sending Reset Link...
+                  </>
+                ) : (
+                  "Send Reset Link"
+                )}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   );
 };
-export default ForgetPassword;
+
+export default ForgotPassword;

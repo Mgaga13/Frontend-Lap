@@ -1,10 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-  useCreateUser,
-  useEditUser,
-  useGetListUser,
-  useRemoveUser,
-} from "../../services/react-query/query/user";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DeleteConfirmation from "../../components/DeleteConfirmation";
@@ -12,63 +6,107 @@ import Modal from "../../components/Modal";
 import { FiEdit2, FiSearch, FiTrash2 } from "react-icons/fi";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import {
-  useGetListProduct,
-  useRemoveProduct,
-} from "../../services/react-query/query/product";
-import { useNavigate } from "react-router-dom";
-
-interface FormData {
-  price: string;
-  oldprice: string;
-  name: string;
-  image: File | null; // Either a File object or null
-  description: string;
-  specification: string;
-  quantity: string;
-}
-function ProductAdmin() {
-  const navigate = useNavigate();
+  useCreateBrand,
+  useEditBrand,
+  useGetListBrand,
+  useRemoveBrand,
+} from "../../services/react-query/query/brand";
+function BrandAdmin() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [searchQuery, setSearchQuery] = useState("");
   const {
     data: listData,
     isLoading,
     isFetching,
     refetch,
-  } = useGetListProduct({
+  } = useGetListBrand({
     page,
     limit,
-    searchText: searchQuery,
   });
-  const {
-    mutate: removeProduct,
-    data: videoData,
-    isSuccess: getSuccess,
-  } = useRemoveProduct();
-  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<any>(null);
 
-  const handleDelete = (user: any) => {
-    setUserToDelete(user);
+  const { mutate: createCate, isSuccess: isSuccessCreate } = useCreateBrand();
+
+  const { mutate: editCate, isSuccess: isSuccessEdit } = useEditBrand();
+
+  const { mutate: removeCate, isSuccess: getSuccess } = useRemoveBrand();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [BrandToDelete, setBrandToDelete] = useState<any>(null);
+  const [name, setName] = useState("");
+  const [editingBrandId, setEditingBrandId] = useState(null);
+
+  const resetForm = () => {
+    setName("");
+    setEditingBrandId(null);
+  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (editingBrandId) {
+      editCate(
+        { id: editingBrandId, name: name },
+        {
+          onSuccess: () => {
+            toast.success("Category Edit successfully!");
+            resetForm();
+            setIsModalOpen(false);
+          },
+        }
+      );
+    } else {
+      createCate(
+        { name },
+        {
+          onSuccess: () => {
+            toast.success("Category added successfully!");
+            resetForm();
+            setIsModalOpen(false);
+          },
+        }
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccessCreate || isSuccessEdit) {
+      setName("");
+      refetch();
+      setIsModalOpen(false);
+    }
+  }, [isSuccessCreate, isSuccessEdit]);
+
+  useEffect(() => {
+    refetch();
+  }, [getSuccess]);
+
+  const handleEdit = (cate: any) => {
+    setName(cate.name);
+    setEditingBrandId(cate.id);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = (cate: any) => {
+    setBrandToDelete(cate);
     setIsDeleteConfirmOpen(true);
   };
 
   const confirmDelete = () => {
-    if (userToDelete) {
-      const { id } = userToDelete;
-      removeProduct(id, {
-        onSuccess: () => {
-          toast.success("Xóa thành công!");
-          refetch();
-          setIsDeleteConfirmOpen(false);
-        },
-      });
+    if (BrandToDelete) {
+      const { id } = BrandToDelete;
+      removeCate(id);
+      toast.success("Xóa thành công!");
+      refetch();
+      setIsDeleteConfirmOpen(false);
     }
   };
 
   const cancelDelete = () => {
     setIsDeleteConfirmOpen(false);
+  };
+
+  const openModal = () => {
+    setName("");
+    setEditingBrandId(null);
+    setIsModalOpen(true);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -82,58 +120,28 @@ function ProductAdmin() {
   );
   return (
     <div className='min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8'>
-      <div className='max-w-6xl mx-auto'>
-        <div
-          className='bg-white rounded-lg shadow-lg p-6'
-          style={{ maxWidth: "67rem" }}
-        >
+      <div className='max-w-6xl'>
+        <div className='bg-white rounded-lg shadow-lg p-6'>
           <div className='flex flex-col sm:flex-row justify-between items-center mb-6'>
             <h1 className='text-2xl font-bold text-gray-800 mb-4 sm:mb-0'>
-              Product Management
+              Brand Management
             </h1>
             <button
-              onClick={() => navigate("/dashboard/products/create-product")}
+              onClick={openModal}
               className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors'
             >
-              Add New Product
+              Add New Brand
             </button>
           </div>
-
-          <div className='relative mb-6'>
-            <FiSearch className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400' />
-            <input
-              type='text'
-              placeholder='Search product...'
-              className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-
           <div className='overflow-x-auto'>
             <table className='min-w-full divide-y divide-gray-200'>
               <thead>
                 <tr>
                   <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Tên sản phẩm
+                    ID
                   </th>
                   <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Giá
-                  </th>
-                  <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Giá Cũ
-                  </th>
-                  <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Mô tả
-                  </th>
-                  <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Hình ảnh
-                  </th>
-                  <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Số lượng
-                  </th>
-                  <th className='px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Thông số kỹ thuật
+                    Name
                   </th>
                   <th className='px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Actions
@@ -141,40 +149,19 @@ function ProductAdmin() {
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
-                {listData?.datas.map((product: any) => (
-                  <tr key={product.id}>
-                    <td className='px-6 py-4  max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
-                      {product.name}
-                    </td>
-                    <td className='px-6 py-4  max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
-                      {product.price}
-                    </td>
-                    <td className='px-6 py-4  max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
-                      {product.oldprice}
-                    </td>
-                    <td className='px-6 py-4 max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
-                      {product.description}
-                    </td>
-                    <td className='px-6 py-4 max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
-                      {product.image}
-                    </td>
-                    <td className='px-6 py-4 max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
-                      {product.quantity}
-                    </td>
-                    <td className='px-6 py-4 max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
-                      {JSON.stringify(product.specification)}
-                    </td>
-                    <td className='px-6 py-4 max-w-[200px] truncate whitespace-nowrap text-right text-sm font-medium'>
+                {listData?.datas.map((cate: any) => (
+                  <tr key={cate.id}>
+                    <td className='px-6 py-4 whitespace-nowrap'>{cate.id}</td>
+                    <td className='px-6 py-4 whitespace-nowrap'>{cate.name}</td>
+                    <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
                       <button
-                        onClick={() => {
-                          navigate(`/dashboard/products/edit/${product.id}`);
-                        }}
+                        onClick={() => handleEdit(cate)}
                         className='text-blue-600 hover:text-blue-900 mr-4'
                       >
                         <FiEdit2 className='inline-block' />
                       </button>
                       <button
-                        onClick={() => handleDelete(product)}
+                        onClick={() => handleDelete(cate)}
                         className='text-red-600 hover:text-red-900'
                       >
                         <FiTrash2 className='inline-block' />
@@ -273,17 +260,39 @@ function ProductAdmin() {
           </nav>
         </div>
       </div>
+      <Modal
+        title={editingBrandId ? "Sủa loại" : "Tạo mới Nhãn Hàng"}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      >
+        <form onSubmit={handleSubmit} className='grid gap-4'>
+          <input
+            type='text'
+            name='name'
+            placeholder='Name'
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            className='p-2 border rounded'
+            required
+          />
+          <button
+            type='submit'
+            className='p-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+          >
+            {editingBrandId ? "Sửa" : "Tạo"}
+          </button>
+        </form>
+      </Modal>
       {isDeleteConfirmOpen && (
         <DeleteConfirmation
-          message='Bạn có muốn xóa người dùng này không?'
+          message='Bạn có muốn xóa nhãn hàng này không?'
           onConfirm={confirmDelete}
           onCancel={cancelDelete}
         />
       )}
-
       <ToastContainer position='top-right' autoClose={5000} />
     </div>
   );
 }
 
-export default ProductAdmin;
+export default BrandAdmin;

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useLogin, useSignup } from "../../services/react-query/query/user";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useStore } from "../../store";
 import { jwtDecode } from "jwt-decode";
 const AuthForm = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -243,12 +243,12 @@ const AuthForm = () => {
           {isLogin && (
             <div className='flex items-center justify-between'>
               <div className='text-sm'>
-                <a
-                  href='#'
+                <Link
+                  to={"/reset-password"}
                   className='font-medium text-indigo-600 hover:text-indigo-500'
                 >
                   Forgot your password?
-                </a>
+                </Link>
               </div>
             </div>
           )}

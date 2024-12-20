@@ -47,6 +47,20 @@ export class ApiService {
       "Content-Type": "application/json",
     },
   });
+  forgetPassword = configApi({
+    path: "v1/auth/forgot-password",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  resetPassword = configApi({
+    path: "v1/auth/reset-password",
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   getAllProduct = configApi({
     // or pass query key = name to get a specific app
@@ -115,6 +129,23 @@ export class ApiService {
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
+  getProfileUser = configApi({
+    path: "v1/users/profile",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  updateProfleUser = configApi({
+    path: "v1/users/update/profile",
+    method: "POST",
+    headers: {
+      "Content-type": "multipart/form-data",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+
   createUser = configApi({
     path: "v1/users",
     method: "POST",
@@ -123,6 +154,7 @@ export class ApiService {
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
+
   editUser = configApi({
     path: "v1/users/update",
     method: "POST",
@@ -140,7 +172,7 @@ export class ApiService {
   });
   // product
   getListProduct = configApi({
-    path: "v1/products/list",
+    path: "v1/product/list",
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -155,14 +187,22 @@ export class ApiService {
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
+  getProduct = configApi({
+    path: "v1/product",
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
   editProduct = configApi({
-    path: "v1/users/update",
+    path: "v1/product/update",
     method: "POST",
     headers: {
       "Content-type": "multipart/form-data",
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
+
   deleteProduct = configApi({
     path: "v1/product",
     method: "DELETE",
@@ -206,43 +246,107 @@ export class ApiService {
 
   // Type
 
-  getListType = configApi({
-    path: "v1/type",
+  getListBrand = configApi({
+    path: "v1/brands",
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
-  getCreateType = configApi({
-    path: "v1/type",
+  getCreateBrand = configApi({
+    path: "v1/brands",
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
-  getEditType = configApi({
-    path: "v1/type/edit",
+  getEditBrand = configApi({
+    path: "v1/brands/edit",
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
-  deleteType = configApi({
-    path: "v1/type",
+  deleteBrand = configApi({
+    path: "v1/brands",
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
+
   // Banner
+
   getListBanner = configApi({
-    path: "v1/banner",
+    path: "v1/banner/all",
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  createBanner = configApi({
+    path: "v1/banner",
+    method: "POST",
+    headers: {
+      "Content-type": "multipart/form-data",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  editBanner = configApi({
+    path: "v1/banner/update",
+    method: "POST",
+    headers: {
+      "Content-type": "multipart/form-data",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  deleteBanner = configApi({
+    path: "v1/banner",
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+
+  // Cart
+
+  getListCartUser = configApi({
+    path: "v1/cart/user",
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+
+  createCart = configApi({
+    path: "v1/cart",
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  updateCart = configApi({
+    path: "v1/cart/update",
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  removeItemCart = configApi({
+    path: "v1/cart/delete",
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  countCart = configApi({
+    path: "v1/cart/user/count",
+    method: "GET",
+    headers: {
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });

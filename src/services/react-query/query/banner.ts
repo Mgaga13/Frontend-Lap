@@ -1,22 +1,28 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { List } from "./commom";
+import { useDebounce } from "../../../components/hooks/useDebounce";
 import { ApiService } from "../../api/ApiClient";
-import { IStore, updateStore } from "../../../store";
-interface CateDto {
-  id?: string;
-  name: string;
-}
-export const useGetListType = (params: List) => {
-  const getListTypeService = ApiService.createInstance();
+import { List } from "./commom";
 
+export const useGetListBanner = (params: List) => {
+  const bannerService = ApiService.createInstance();
+  const debouncedSearchText = useDebounce<string>(params.searchText, 500);
   return useQuery(
-    ["getListType", params.page],
+    ["getListBanner", params.page, debouncedSearchText],
     () => {
-      return getListTypeService.getListType({
-        queryParams: { page: params.page },
+      const queryParams: any = {
+        page: params.page,
+        limit: params.limit,
+      };
+
+      if (debouncedSearchText) {
+        queryParams.searchText = debouncedSearchText;
+      }
+      return bannerService.getListBanner({
+        queryParams,
       });
     },
     {
+      enabled: !!debouncedSearchText || debouncedSearchText === "",
       onSuccess: () => {
         // Xử lý thành công nếu cần thiết
       },
@@ -24,34 +30,27 @@ export const useGetListType = (params: List) => {
   );
 };
 
-export const useCreateType = () => {
-  const userService = ApiService.createInstance();
+export const useCreateBanner = () => {
+  const bannerService = ApiService.createInstance();
   return useMutation(
-    (payload: CateDto) => {
-      return userService.getCreateType({
-        data: {
-          name: payload.name,
-        },
+    (payload: any) => {
+      return bannerService.createBanner({
+        data: payload,
       });
     },
     {
       onSuccess: (data: any) => {
-        console.log("data from Type", data);
+        console.log("data from useGenerateVideoFromText", data);
       },
-      onError: (error: any) => {
-        updateStore((state: IStore) => {
-          state.UserSlice.isError = true;
-          state.UserSlice.errorMess = error.response.data.error_message;
-        });
-      },
+      onError: (error: any) => {},
     }
   );
 };
-export const useRemoveType = () => {
-  const getVideoService = ApiService.createInstance();
+export const useRemoveBanner = () => {
+  const bannerService = ApiService.createInstance();
   return useMutation(
     (id: any) => {
-      return getVideoService.deleteType({
+      return bannerService.deleteBanner({
         pathParams: {
           id: id,
         },
@@ -68,13 +67,12 @@ export const useRemoveType = () => {
   );
 };
 
-export const useEditType = () => {
-  const getVideoService = ApiService.createInstance();
+export const useEditBanner = () => {
+  const bannerService = ApiService.createInstance();
   return useMutation(
-    (payload: CateDto) => {
-      console.log(payload);
-      return getVideoService.getEditCategory({
-        data: { id: payload.id, name: payload.name },
+    (payload: any) => {
+      return bannerService.editBanner({
+        data: payload,
       });
     },
     {

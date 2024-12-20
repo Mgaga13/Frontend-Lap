@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FiUpload } from "react-icons/fi";
-import { useCreateProduct } from "../../services/react-query/query/product";
-import { useNavigate } from "react-router-dom";
+import {
+  useEditProduct,
+  useGetProduct,
+} from "../../services/react-query/query/product";
 import { useGetListCategory } from "../../services/react-query/query/category";
 import { useGetListBrand } from "../../services/react-query/query/brand";
 
-const CreateProducts = () => {
+const EditProduct = () => {
   const route = useNavigate();
+  const { id } = useParams(); // Lấy id từ URL param
   const [formData, setFormData] = useState({
+    id: "",
     name: "",
     price: 0,
     oldPrice: 0,
@@ -32,8 +37,34 @@ const CreateProducts = () => {
   const [images, setImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [errors, setErrors] = useState<any>({});
-  const { mutate: createProduct, isSuccess: isSuccessCreate } =
-    useCreateProduct();
+  const [oldSpecification, setSpecification] = useState("");
+
+  // Fetch product details using the ID from the URL
+  const { data: productData, isLoading } = useGetProduct(id);
+  const { mutate: updateProduct, isSuccess: isSuccessUpdate } =
+    useEditProduct();
+
+  // Chỉnh sửa formData khi lấy dữ liệu sản phẩm
+  useEffect(() => {
+    if (productData) {
+      setFormData({
+        id: productData.id,
+        name: productData.name,
+        price: productData.price,
+        oldPrice: productData.oldPrice,
+        description: productData.description,
+        quantity: productData.quantity,
+        specification: productData.specification,
+        brand_id: productData.brand_id,
+        category_id: productData.category_id,
+      });
+      setSpecification(productData.specification);
+      // Thiết lập lại preview URL cho ảnh hiện tại của sản phẩm
+      setPreviewUrls(productData.image.map((img: string) => img)); // Giả sử `productData.images` là mảng chứa URLs ảnh
+    }
+  }, [productData]);
+
+  // Cập nhật thông tin input khi có sự thay đổi
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -48,17 +79,19 @@ const CreateProducts = () => {
     }
   };
 
+  // Xử lý thay đổi ảnh
   const handleImageChange = (e: any) => {
-    const files = Array.from(e.target.files); // Chuyển FileList thành mảng
+    const files = Array.from(e.target.files);
     if (files.length > 0) {
-      setImages((prevImages: any) => [...prevImages, ...files]); // Nối file mới vào mảng cũ
+      setImages((prevImages: any) => [...prevImages, ...files]);
       const newPreviewUrls = files.map((file: any) =>
         URL.createObjectURL(file)
       );
-      setPreviewUrls((prevUrls) => [...prevUrls, ...newPreviewUrls]); // Thêm preview URL mới
+      setPreviewUrls((prevUrls) => [...prevUrls, ...newPreviewUrls]);
     }
   };
 
+  // Kiểm tra tính hợp lệ của form
   const validateForm = () => {
     const newErrors: any = {};
     if (!formData.name.trim()) {
@@ -73,64 +106,43 @@ const CreateProducts = () => {
     if (!formData.description.trim()) {
       newErrors.description = "Description is required";
     }
-    if (images.length === 0) {
-      newErrors.images = "At least one product image is required";
-    }
     return newErrors;
   };
 
-  useEffect(() => {
-    if (isSuccessCreate) {
-      route("/dashboard/products");
-    }
-  }, [isSuccessCreate]);
-
+  // Xử lý gửi form
   const handleSubmit = (e: any) => {
     e.preventDefault();
     const validationErrors = validateForm();
-
-    // Kiểm tra lỗi
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       toast.error("Please fill all required fields!");
       return;
     }
 
-    // Tạo FormData
     const formDataToSubmit = new FormData();
+
     images.forEach((image) => {
-      formDataToSubmit.append("files", image); // Field name là "files"
+      formDataToSubmit.append("files", image);
     });
+    // Append dữ liệu khác vào formData
     Object.entries(formData).forEach(([key, value]) => {
-      if (value) formDataToSubmit.append(key, value as string | Blob);
+      formDataToSubmit.append(key, value as string | Blob);
     });
-    // Gọi API gửi form
-    createProduct(formDataToSubmit, {
+
+    updateProduct(formDataToSubmit, {
       onSuccess: () => {
-        toast.success("Product added successfully!");
-        setFormData({
-          name: "",
-          price: 0,
-          oldPrice: 0,
-          description: "",
-          quantity: 0,
-          specification: "",
-          brand_id: "",
-          category_id: "",
-        });
-        setImages([]);
-        setPreviewUrls([]);
+        toast.success("Product updated successfully!");
+        route("/dashboard/products");
       },
     });
   };
 
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <div className='min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8'>
       <div className='max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md'>
-        <h2 className='text-2xl font-bold text-gray-900 mb-8'>
-          Create New Product
-        </h2>
-
+        <h2 className='text-2xl font-bold text-gray-900 mb-8'>Edit Product</h2>
         <form onSubmit={handleSubmit} className='space-y-6'>
           {/* Product Name */}
           <div>
@@ -236,7 +248,6 @@ const CreateProducts = () => {
               />
             </div>
           </div>
-          {/* Image Upload */}
           <div>
             <label className='block text-sm font-medium text-gray-700'>
               Product Images*
@@ -333,22 +344,11 @@ const CreateProducts = () => {
                 {errors.specification}
               </p>
             )}
+            <p>Specification Old</p>
             <p className='mt-2 text-xs text-gray-500'>
               <pre className='bg-gray-100 p-4 rounded-md'>
                 <code className='text-xs text-gray-800'>
-                  {`{
-  "Tương thích": "Windows",
-  "Cách kết nối": "Wired-Detachable Type-C",
-  "Độ dài dây / Khoảng cách kết nối": "2.01 m",
-  "Loại switch": "Razer Linear Optical",
-  "Kiểu bàn phím": "Tenkeyless (Rút gọn)",
-  "Số phím": "87 phím",
-  "Chất liệu keycaps": "PBT",
-  "Đèn LED": "RGB",
-  "Phần mềm hỗ trợ": "Razer Synapse",
-  "Kích thước": "Dài 36.5 cm - Rộng 13.5 cm - Cao 1.9 cm - Nặng 1 kg",
-  "Sản xuất tại": "Trung Quốc"
-}`}
+                  {oldSpecification}
                 </code>
               </pre>
             </p>
@@ -379,7 +379,7 @@ const CreateProducts = () => {
               type='submit'
               className='w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
             >
-              Create Product
+              Update Product
             </button>
           </div>
         </form>
@@ -389,4 +389,4 @@ const CreateProducts = () => {
   );
 };
 
-export default CreateProducts;
+export default EditProduct;

@@ -4,7 +4,7 @@ import { ApiService } from "../../api/ApiClient";
 import { List } from "./commom";
 
 export const useGetListProduct = (params: List) => {
-  const getListUserService = ApiService.createInstance();
+  const getProductService = ApiService.createInstance();
   const debouncedSearchText = useDebounce<string>(params.searchText, 500);
   return useQuery(
     ["getListProduct", params.page, debouncedSearchText],
@@ -17,7 +17,7 @@ export const useGetListProduct = (params: List) => {
       if (debouncedSearchText) {
         queryParams.searchText = debouncedSearchText;
       }
-      return getListUserService.getListProduct({
+      return getProductService.getListProduct({
         queryParams,
       });
     },
@@ -30,11 +30,33 @@ export const useGetListProduct = (params: List) => {
   );
 };
 
-export const useCreateUser = () => {
-  const userService = ApiService.createInstance();
+export const useGetProduct = (params: any) => {
+  const productService = ApiService.createInstance();
+  return useQuery(
+    ["getUser"],
+    () => {
+      return productService.getProduct({
+        pathParams: {
+          id: params,
+        },
+      });
+    },
+    {
+      onSuccess: (data: any) => {
+        console.log("User removed successfully:", data);
+      },
+      onError: (error: any) => {
+        console.error("Error removing user:", error);
+      },
+    }
+  );
+};
+
+export const useCreateProduct = () => {
+  const productService = ApiService.createInstance();
   return useMutation(
     (payload: any) => {
-      return userService.createUser({
+      return productService.createProduct({
         data: payload,
       });
     },
@@ -48,11 +70,11 @@ export const useCreateUser = () => {
     }
   );
 };
-export const useRemoveUser = () => {
-  const getVideoService = ApiService.createInstance();
+export const useRemoveProduct = () => {
+  const productService = ApiService.createInstance();
   return useMutation(
     (id: any) => {
-      return getVideoService.deleteUser({
+      return productService.deleteProduct({
         pathParams: {
           id: id,
         },
@@ -69,11 +91,11 @@ export const useRemoveUser = () => {
   );
 };
 
-export const useEditUser = () => {
-  const getVideoService = ApiService.createInstance();
+export const useEditProduct = () => {
+  const productService = ApiService.createInstance();
   return useMutation(
     (payload: any) => {
-      return getVideoService.editUser({
+      return productService.editProduct({
         data: payload,
       });
     },

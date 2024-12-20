@@ -1,97 +1,125 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { FaDollarSign, FaTags, FaFilter } from "react-icons/fa";
+import { useGetListBrand } from "../services/react-query/query/brand";
+import { useGetListCategory } from "../services/react-query/query/category";
 
-const FilterBar = ({ onFilter }: any) => {
-  const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [selectedBrand, setSelectedBrand] = useState("");
-  const [rating, setRating] = useState(0);
+interface FilterProps {
+  onFilter: (filters: {
+    category?: string;
+    brand?: string;
+    priceRange?: string;
+  }) => void;
+}
 
-  const brands = ["Apple", "Samsung", "Sony", "Xiaomi", "LG"]; // Dummy brand data
+const FilterBar: React.FC<FilterProps> = ({ onFilter }) => {
+  const { data: categoryData } = useGetListCategory({
+    page: 1,
+    limit: 10,
+    searchText: "",
+  });
+  const { data: brandData } = useGetListBrand({
+    page: 1,
+    limit: 10,
+  });
 
-  const handlePriceChange = (e: any) => {
+  const [filters, setFilters] = useState({
+    category: "",
+    brand: "",
+    priceRange: "all",
+  });
+
+  const priceRanges = [
+    { label: "All", value: "all" },
+    { label: "Under $50", value: "0-50" },
+    { label: "$50 - $100", value: "50-100" },
+    { label: "$100 - $200", value: "100-200" },
+    { label: "Above $200", value: "200+" },
+  ];
+
+  // Update parent component whenever filters change
+  useEffect(() => {
+    onFilter(filters);
+  }, [filters, onFilter]);
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setPriceRange((prev) =>
-      name === "min" ? [Number(value), prev[1]] : [prev[0], Number(value)]
-    );
-  };
-
-  const handleBrandChange = (e: any) => {
-    setSelectedBrand(e.target.value);
-  };
-
-  const handleRatingChange = (e: any) => {
-    setRating(Number(e.target.value));
-  };
-
-  const handleApplyFilters = () => {
-    onFilter({ priceRange, selectedBrand, rating });
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
   };
 
   return (
-    <div className='p-4 bg-white rounded-lg shadow-md space-y-4'>
-      {/* Filter by Price */}
-      <div>
-        <h3 className='font-medium text-lg mb-2'>Khoảng giá</h3>
-        <div className='flex gap-2'>
-          <input
-            type='number'
-            name='min'
-            placeholder='Min'
-            value={priceRange[0]}
-            onChange={handlePriceChange}
-            className='w-full px-3 py-2 border rounded-lg'
-          />
-          <input
-            type='number'
-            name='max'
-            placeholder='Max'
-            value={priceRange[1]}
-            onChange={handlePriceChange}
-            className='w-full px-3 py-2 border rounded-lg'
-          />
+    <div className='bg-white p-6 rounded-xl shadow-md'>
+      <div className='flex items-center mb-4'>
+        <FaFilter className='text-indigo-500 mr-2' />
+        <h3 className='text-lg font-medium text-gray-900'>Filters</h3>
+      </div>
+
+      <div className='space-y-4'>
+        <div className='flex flex-wrap gap-4'>
+          {/* Category Filter */}
+          <div className='flex-1 min-w-[200px]'>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>
+              <FaTags className='inline mr-2' />
+              Category
+            </label>
+            <select
+              name='category'
+              value={filters.category}
+              onChange={handleFilterChange}
+              className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'
+            >
+              <option value=''>All Categories</option>
+              {categoryData?.datas.map((category: any) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Brand Filter */}
+          <div className='flex-1 min-w-[200px]'>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>
+              Brand
+            </label>
+            <select
+              name='brand'
+              value={filters.brand}
+              onChange={handleFilterChange}
+              className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'
+            >
+              <option value=''>All Brands</option>
+              {brandData?.datas.map((brand: any) => (
+                <option key={brand.id} value={brand.id}>
+                  {brand.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Price Range Filter */}
+          <div className='flex-1 min-w-[200px]'>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>
+              <FaDollarSign className='inline mr-2' />
+              Price Range
+            </label>
+            <select
+              name='priceRange'
+              value={filters.priceRange}
+              onChange={handleFilterChange}
+              className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'
+            >
+              {priceRanges.map((range) => (
+                <option key={range.value} value={range.value}>
+                  {range.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
-
-      {/* Filter by Brand */}
-      <div>
-        <h3 className='font-medium text-lg mb-2'>Nhãn hàng</h3>
-        <select
-          value={selectedBrand}
-          onChange={handleBrandChange}
-          className='w-full px-3 py-2 border rounded-lg'
-        >
-          <option value=''>Chọn nhãn hàng</option>
-          {brands.map((brand) => (
-            <option key={brand} value={brand}>
-              {brand}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Filter by Rating */}
-      <div>
-        <h3 className='font-medium text-lg mb-2'>Đánh giá</h3>
-        <select
-          value={rating}
-          onChange={handleRatingChange}
-          className='w-full px-3 py-2 border rounded-lg'
-        >
-          <option value={0}>Tất cả</option>
-          <option value={1}>1 sao trở lên</option>
-          <option value={2}>2 sao trở lên</option>
-          <option value={3}>3 sao trở lên</option>
-          <option value={4}>4 sao trở lên</option>
-          <option value={5}>5 sao</option>
-        </select>
-      </div>
-
-      {/* Apply Filters */}
-      <button
-        onClick={handleApplyFilters}
-        className='w-full bg-indigo-600 text-white px-4 py-2 rounded-lg'
-      >
-        Áp dụng
-      </button>
     </div>
   );
 };

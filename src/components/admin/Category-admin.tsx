@@ -123,7 +123,7 @@ function CategoryAdmin() {
   );
   return (
     <div className='min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8'>
-      <div className='max-w-7xl mx-auto'>
+      <div className='max-w-6xl'>
         <div className='bg-white rounded-lg shadow-lg p-6'>
           <div className='flex flex-col sm:flex-row justify-between items-center mb-6'>
             <h1 className='text-2xl font-bold text-gray-800 mb-4 sm:mb-0'>

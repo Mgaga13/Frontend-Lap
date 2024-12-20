@@ -233,3 +233,110 @@ export const useEditUser = () => {
     }
   );
 };
+
+export const useProfileUser = () => {
+  const getListUserService = ApiService.createInstance();
+  return useQuery(
+    ["getProfileUser"],
+    () => {
+      return getListUserService.getProfileUser({});
+    },
+    {
+      onSuccess: () => {
+        // Xử lý thành công nếu cần thiết
+      },
+    }
+  );
+};
+export const useUpdateProfileUser = () => {
+  const getVideoService = ApiService.createInstance();
+  return useMutation(
+    (payload: any) => {
+      return getVideoService.updateProfleUser({
+        data: payload,
+      });
+    },
+    {
+      onSuccess: (data: any) => {
+        console.log("Edit successfully:", data);
+      },
+      onError: (error: any) => {
+        console.error("Error Edit user:", error);
+      },
+    }
+  );
+};
+
+export const useForgetPassword = () => {
+  const userService = ApiService.createInstance();
+  return useMutation(
+    (payload: any) => {
+      return userService.forgetPassword({
+        data: {
+          email: payload.email,
+        },
+      });
+    },
+    {
+      onSuccess: (data: any) => {
+        console.log("data from category", data);
+      },
+      onError: (error: any) => {
+        updateStore((state: IStore) => {
+          state.UserSlice.isError = true;
+          state.UserSlice.errorMess = error.response.data.error_message;
+        });
+      },
+    }
+  );
+};
+
+export const useResetPassword = () => {
+  const userService = ApiService.createInstance();
+  return useMutation(
+    (payload: any) => {
+      return userService.resetPassword({
+        data: {
+          newPassword: payload.newPassword,
+          resetToken: payload.resetToken,
+        },
+      });
+    },
+    {
+      onSuccess: (data: any) => {
+        console.log("data from category", data);
+      },
+      onError: (error: any) => {
+        updateStore((state: IStore) => {
+          state.UserSlice.isError = true;
+          state.UserSlice.errorMess = error.response.data.error_message;
+        });
+      },
+    }
+  );
+};
+
+export const useChangePassword = () => {
+  const userService = ApiService.createInstance();
+  return useMutation(
+    (payload: any) => {
+      return userService.resetPassword({
+        data: {
+          currentPassword: payload.newPassword,
+          newPassword: payload.resetToken,
+        },
+      });
+    },
+    {
+      onSuccess: (data: any) => {
+        console.log("data from category", data);
+      },
+      onError: (error: any) => {
+        updateStore((state: IStore) => {
+          state.UserSlice.isError = true;
+          state.UserSlice.errorMess = error.response.data.error_message;
+        });
+      },
+    }
+  );
+};

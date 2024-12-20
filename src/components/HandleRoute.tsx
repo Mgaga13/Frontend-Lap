@@ -21,6 +21,7 @@ const HandleRoute = ({ children }: { children: React.ReactNode }) => {
     } else {
       const { access_token, refresh_token, user_id } = JSON.parse(data);
       let decodedToken = jwtDecode(access_token);
+      // localStorage.setItem('userId',decodedToken.id ??"")
       let currentDate = new Date();
       const isRemember = localStorage.getItem("rememberPassword") === "true";
       // JWT exp is in seconds

@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { FiMenu, FiShoppingCart, FiUser } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { useStore } from "../store";
+import { useCountCart } from "../services/react-query/query/cart";
 const Header = () => {
   const { UserSlice, AuthSlice } = useStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cartItems] = useState(3);
+  // const { data: count } = useCountCart();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const router = useNavigate();
   const navLinks = [{ title: "Home", href: "#" }];
 
   const handleLogout = () => {
@@ -59,10 +60,16 @@ const Header = () => {
                 {isDropdownOpen && (
                   <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1'>
                     <Link
-                      to='/profile'
+                      to='/user/profile'
                       className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
                     >
                       Thông tin cá nhân
+                    </Link>
+                    <Link
+                      to='/user/change-password'
+                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                    >
+                      Đổi mật khẩu
                     </Link>
                     <button
                       onClick={handleLogout}
@@ -87,13 +94,16 @@ const Header = () => {
             <button
               className='relative p-2 text-gray-600 hover:text-gray-900'
               aria-label='Shopping cart'
+              onClick={() => {
+                router("/cart");
+              }}
             >
               <FiShoppingCart className='h-6 w-6' />
-              {cartItems > 0 && (
-                <span className='absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full'>
-                  {cartItems}
-                </span>
-              )}
+              {/* {count > 0 && ( */}
+              <span className='absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full'>
+                {3}
+              </span>
+              {/* )} */}
             </button>
           </div>
 
