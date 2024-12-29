@@ -25,10 +25,10 @@ export const useGetListCategory = (params: List) => {
 };
 
 export const useCreateCategory = () => {
-  const userService = ApiService.createInstance();
+  const categoryService = ApiService.createInstance();
   return useMutation(
     (payload: CateDto) => {
-      return userService.getCreateCategory({
+      return categoryService.getCreateCategory({
         data: {
           name: payload.name,
         },
@@ -48,10 +48,10 @@ export const useCreateCategory = () => {
   );
 };
 export const useRemoveCategory = () => {
-  const getVideoService = ApiService.createInstance();
+  const categoryService = ApiService.createInstance();
   return useMutation(
     (id: any) => {
-      return getVideoService.deleteCategory({
+      return categoryService.deleteCategory({
         pathParams: {
           id: id,
         },
@@ -69,11 +69,11 @@ export const useRemoveCategory = () => {
 };
 
 export const useEditCategory = () => {
-  const getVideoService = ApiService.createInstance();
+  const categoryService = ApiService.createInstance();
   return useMutation(
     (payload: CateDto) => {
       console.log(payload);
-      return getVideoService.getEditCategory({
+      return categoryService.getEditCategory({
         data: { id: payload.id, name: payload.name },
       });
     },

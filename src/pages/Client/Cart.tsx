@@ -6,6 +6,7 @@ import {
 } from "../../services/react-query/query/cart"; // API hook
 import { useState } from "react";
 import CartSummary from "../../components/CartSummary"; // Import component tóm tắt đơn hàng
+import { formatVND } from "../../utils/formatprice";
 
 const Cart = () => {
   const [page, setPage] = useState(1);
@@ -51,7 +52,6 @@ const Cart = () => {
 
   const increamQuantity = (item: any) => {
     if (item) {
-      console.log(ListCart);
       updateQuantityCart(
         {
           cartId: ListCart.datas[0].id,
@@ -139,7 +139,7 @@ const Cart = () => {
                           </button>
                         </div>
                         <span className='ml-4 text-gray-500'>
-                          ${item.product.price.toFixed(2)}
+                          {formatVND(item.product.price)}
                         </span>
                       </div>
                     </div>
@@ -159,7 +159,7 @@ const Cart = () => {
           </div>
 
           <div className='lg:w-1/3'>
-            <CartSummary subtotal={totalPrice()} />
+            <CartSummary subtotal={totalPrice()} cartItem={selectedItems} />
           </div>
         </div>
       </div>

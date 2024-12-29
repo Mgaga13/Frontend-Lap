@@ -320,10 +320,10 @@ export const useChangePassword = () => {
   const userService = ApiService.createInstance();
   return useMutation(
     (payload: any) => {
-      return userService.resetPassword({
+      return userService.changePassword({
         data: {
-          currentPassword: payload.newPassword,
-          newPassword: payload.resetToken,
+          currentPassword: payload.currentPassword,
+          newPassword: payload.newPassword,
         },
       });
     },

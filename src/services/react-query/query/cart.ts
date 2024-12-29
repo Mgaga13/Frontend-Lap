@@ -32,7 +32,6 @@ export const useCreateCart = () => {
   const cartService = ApiService.createInstance();
   return useMutation(
     (payload: CartDto) => {
-      console.log(payload);
       return cartService.createCart({
         data: {
           productId: payload.productId,
@@ -99,7 +98,7 @@ export const useEditCart = () => {
 export const useCountCart = () => {
   const cartService = ApiService.createInstance();
   return useQuery(
-    ["getListUser"],
+    ["getListCart"],
     () => {
       return cartService.countCart({});
     },

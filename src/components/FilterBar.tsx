@@ -29,11 +29,9 @@ const FilterBar: React.FC<FilterProps> = ({ onFilter }) => {
   });
 
   const priceRanges = [
-    { label: "All", value: "all" },
-    { label: "Under $50", value: "0-50" },
-    { label: "$50 - $100", value: "50-100" },
-    { label: "$100 - $200", value: "100-200" },
-    { label: "Above $200", value: "200+" },
+    { label: "Tất cả", value: "all" },
+    { label: "Giảm dần", value: 1 },
+    { label: "Tăng dần", value: 2 },
   ];
 
   // Update parent component whenever filters change
@@ -53,7 +51,7 @@ const FilterBar: React.FC<FilterProps> = ({ onFilter }) => {
     <div className='bg-white p-6 rounded-xl shadow-md'>
       <div className='flex items-center mb-4'>
         <FaFilter className='text-indigo-500 mr-2' />
-        <h3 className='text-lg font-medium text-gray-900'>Filters</h3>
+        <h3 className='text-lg font-medium text-gray-900'>Lọc</h3>
       </div>
 
       <div className='space-y-4'>
@@ -62,7 +60,7 @@ const FilterBar: React.FC<FilterProps> = ({ onFilter }) => {
           <div className='flex-1 min-w-[200px]'>
             <label className='block text-sm font-medium text-gray-700 mb-1'>
               <FaTags className='inline mr-2' />
-              Category
+              Thể loại
             </label>
             <select
               name='category'
@@ -70,7 +68,7 @@ const FilterBar: React.FC<FilterProps> = ({ onFilter }) => {
               onChange={handleFilterChange}
               className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'
             >
-              <option value=''>All Categories</option>
+              <option value=''>Danh sách bàn phím</option>
               {categoryData?.datas.map((category: any) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
@@ -82,7 +80,7 @@ const FilterBar: React.FC<FilterProps> = ({ onFilter }) => {
           {/* Brand Filter */}
           <div className='flex-1 min-w-[200px]'>
             <label className='block text-sm font-medium text-gray-700 mb-1'>
-              Brand
+              Nhãn hàng
             </label>
             <select
               name='brand'
@@ -90,7 +88,7 @@ const FilterBar: React.FC<FilterProps> = ({ onFilter }) => {
               onChange={handleFilterChange}
               className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'
             >
-              <option value=''>All Brands</option>
+              <option value=''>Danh sách nhãn hàng</option>
               {brandData?.datas.map((brand: any) => (
                 <option key={brand.id} value={brand.id}>
                   {brand.name}
@@ -103,7 +101,7 @@ const FilterBar: React.FC<FilterProps> = ({ onFilter }) => {
           <div className='flex-1 min-w-[200px]'>
             <label className='block text-sm font-medium text-gray-700 mb-1'>
               <FaDollarSign className='inline mr-2' />
-              Price Range
+              Khoảng giá
             </label>
             <select
               name='priceRange'

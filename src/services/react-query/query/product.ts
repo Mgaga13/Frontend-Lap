@@ -3,6 +3,16 @@ import { useDebounce } from "../../../components/hooks/useDebounce";
 import { ApiService } from "../../api/ApiClient";
 import { List } from "./commom";
 
+interface filterProduct {
+  page: number;
+  limit: number;
+  searchText?: string;
+  categoryId?: string;
+  brandId?: string;
+  sort?: string;
+  sortPrice?: any;
+}
+
 export const useGetListProduct = (params: List) => {
   const getProductService = ApiService.createInstance();
   const debouncedSearchText = useDebounce<string>(params.searchText, 500);
@@ -33,7 +43,7 @@ export const useGetListProduct = (params: List) => {
 export const useGetProduct = (params: any) => {
   const productService = ApiService.createInstance();
   return useQuery(
-    ["getUser"],
+    ["getProduct"],
     () => {
       return productService.getProduct({
         pathParams: {
@@ -105,6 +115,32 @@ export const useEditProduct = () => {
       },
       onError: (error: any) => {
         console.error("Error Edit user:", error);
+      },
+    }
+  );
+};
+
+export const useGetProductAll = (payload: filterProduct) => {
+  const productService = ApiService.createInstance();
+
+  return useQuery(
+    ["getProductDetail", payload], // Bao gồm payload để caching chính xác
+    () => {
+      console.log(payload);
+      if (payload.sortPrice === "all") {
+        delete payload.sortPrice;
+      }
+      payload.sortPrice = Number(payload.sortPrice);
+      return productService.getProductDetail({
+        data: payload, // Truyền payload vào body của POST request
+      });
+    },
+    {
+      onSuccess: (data: any) => {
+        console.log("Product detail fetched successfully:", data);
+      },
+      onError: (error: any) => {
+        console.error("Error fetching product detail:", error);
       },
     }
   );

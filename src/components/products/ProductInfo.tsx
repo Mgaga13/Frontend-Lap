@@ -1,46 +1,50 @@
 import React, { useState } from "react";
+import { formatVND } from "../../utils/formatprice";
+interface ProductInfoProps {
+  name: string;
+  description: string;
+  price: number;
+  quantityInStock: number;
+}
 
-const ProductInfo = () => {
+const ProductInfo = (props: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
-  const [color, setColor] = useState("Đen");
 
   const handleAddToCart = () => {
-    console.log("Số lượng:", quantity);
-    console.log("Màu sắc:", color);
-    alert(`Đã thêm vào giỏ hàng: ${quantity} sản phẩm màu ${color}`);
+    // Logic for adding the product to the cart
+    console.log(`Added ${quantity} of ${name} to the cart.`);
   };
 
   const handleBuyNow = () => {
-    console.log("Mua ngay:", { quantity, color });
-    alert(`Mua ngay: ${quantity} sản phẩm màu ${color}`);
+    // Logic for immediate purchase
+    console.log(`Buying ${quantity} of ${name} now.`);
   };
 
   return (
     <div>
-      <h1 className='text-2xl md:text-4xl font-bold mb-4'>Tên sản phẩm</h1>
-      <p className='text-gray-700 text-lg mb-4'>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Natus ea
-        officia totam adipisci commodi minima vitae beatae in, reprehenderit
-        veritatis sunt quae quisquam quibusdam libero quod consectetur nemo
-        atque illo!
+      <h1 className='text-2xl md:text-4xl font-bold mb-4'>{props.name}</h1>
+      <p className='text-gray-700 text-lg mb-4'>{props.description}</p>
+      <p className='text-3xl font-semibold text-red-500 mb-4'>
+        {formatVND(props.price)} VND
       </p>
-      <p className='text-3xl font-semibold text-red-500 mb-4'>1,500,000 VND</p>
 
-      {/* Số lượng */}
+      {/* Quantity selection */}
       <div className='mb-4'>
         <label className='block text-lg font-semibold mb-2' htmlFor='quantity'>
-          Số lượng: 30
+          Số lượng còn lại: {props.quantityInStock}
         </label>
         <input
           id='quantity'
           type='number'
           min='1'
+          max={props.quantityInStock}
           value={quantity}
           onChange={(e) => setQuantity(+e.target.value)}
           className='border border-gray-300 p-2 rounded-lg w-20 text-center'
         />
       </div>
-      {/* Nút hành động */}
+
+      {/* Action buttons */}
       <div className='flex space-x-4'>
         <button
           onClick={handleAddToCart}

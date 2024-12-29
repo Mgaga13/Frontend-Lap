@@ -108,12 +108,12 @@ const ProductDetail = ({ product }: any) => {
                       ${(price - (price * discount) / 100).toFixed(2)}
                     </span>
                     <span className='text-lg text-gray-500 line-through'>
-                      ${price.toFixed(2)}
+                      ${price}
                     </span>
                   </>
                 ) : (
                   <span className='text-3xl font-bold text-indigo-600'>
-                    ${price.toFixed(2)}
+                    ${price}
                   </span>
                 )}
               </div>

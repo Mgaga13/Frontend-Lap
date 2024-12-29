@@ -71,11 +71,11 @@ const ForgotPassword = () => {
           <RiLockPasswordLine className='w-20 h-20 text-indigo-600' />
         </div>
         <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
-          Forgot your password?
+          Quên mật khẩu?
         </h2>
         <p className='mt-2 text-center text-sm text-gray-600'>
-          Enter your email address and we'll send you a link to reset your
-          password.
+          Nhập địa chỉ email của bạn và chúng tôi sẽ gửi cho bạn một liên kết để
+          đặt lại mật khẩu của bạn.
         </p>
       </div>
 
@@ -87,7 +87,7 @@ const ForgotPassword = () => {
                 htmlFor='email'
                 className='block text-sm font-medium text-gray-700'
               >
-                Email address
+                Email
               </label>
               <div className='mt-1 relative rounded-md shadow-sm'>
                 <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
@@ -156,10 +156,10 @@ const ForgotPassword = () => {
                         d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
                       ></path>
                     </svg>
-                    Sending Reset Link...
+                    Đang gửi link...
                   </>
                 ) : (
-                  "Send Reset Link"
+                  "Gủi đổi mật khẩu"
                 )}
               </button>
             </div>

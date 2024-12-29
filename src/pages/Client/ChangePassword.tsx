@@ -148,7 +148,7 @@ const ChangePassword = () => {
             <FaLock className='h-12 w-12 text-indigo-600 mx-auto' />
           </div>
           <h2 className='mt-6 text-3xl font-extrabold text-gray-900'>
-            {isResetPassword ? "Reset Password" : "Change Password"}
+            {isResetPassword ? "Đặt lại mật khẩu" : "Đổi mật khẩu "}
           </h2>
         </div>
 
@@ -160,7 +160,7 @@ const ChangePassword = () => {
                   htmlFor='currentPassword'
                   className='block text-sm font-medium text-gray-700'
                 >
-                  Current Password
+                  Mật khẩu hiện tại
                 </label>
                 <div className='mt-1 relative'>
                   <input
@@ -196,7 +196,7 @@ const ChangePassword = () => {
                 htmlFor='newPassword'
                 className='block text-sm font-medium text-gray-700'
               >
-                New Password
+                Mật khẩu mới
               </label>
               <div className='mt-1 relative'>
                 <input
@@ -231,7 +231,7 @@ const ChangePassword = () => {
                 htmlFor='confirmPassword'
                 className='block text-sm font-medium text-gray-700'
               >
-                Confirm New Password
+                Xác nhận mật khẩu
               </label>
               <div className='mt-1 relative'>
                 <input
@@ -272,7 +272,7 @@ const ChangePassword = () => {
                   : "bg-gray-400 cursor-not-allowed"
               } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
             >
-              Change Password
+              Đổi mật khẩu
             </button>
           </div>
         </form>

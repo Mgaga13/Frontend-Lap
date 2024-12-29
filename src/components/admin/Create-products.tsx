@@ -128,14 +128,14 @@ const CreateProducts = () => {
     <div className='min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8'>
       <div className='max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md'>
         <h2 className='text-2xl font-bold text-gray-900 mb-8'>
-          Create New Product
+          Tạo sản phẩm mới
         </h2>
 
         <form onSubmit={handleSubmit} className='space-y-6'>
           {/* Product Name */}
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              Product Name*
+              Tên sản phẩm*
             </label>
             <input
               type='text'
@@ -158,7 +158,7 @@ const CreateProducts = () => {
                   htmlFor='brand'
                   className='block text-sm font-medium text-gray-700'
                 >
-                  Select Brand
+                  Chọn nhãn hàng
                 </label>
                 <select
                   name='brand_id'
@@ -166,7 +166,7 @@ const CreateProducts = () => {
                   onChange={handleInputChange}
                   className='w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:border-gray-400 transition-colors duration-200'
                 >
-                  <option value=''>Choose a brand</option>
+                  <option value=''>Chọn một nhãn hàng</option>
                   {brands?.datas?.map((brand: any) => (
                     <option key={brand.id} value={brand.id}>
                       {brand.name}
@@ -180,7 +180,7 @@ const CreateProducts = () => {
                   htmlFor='category'
                   className='block text-sm font-medium text-gray-700'
                 >
-                  Select Category
+                  Chọn thể loại
                 </label>
                 <select
                   name='category_id'
@@ -188,7 +188,7 @@ const CreateProducts = () => {
                   onChange={handleInputChange}
                   className='w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:border-gray-400 transition-colors duration-200'
                 >
-                  <option value=''>Choose a category</option>
+                  <option value=''>Chọn một thể loại</option>
                   {categories?.datas?.map((category: any) => (
                     <option key={category.id} value={category.id}>
                       {category.name}
@@ -201,7 +201,7 @@ const CreateProducts = () => {
           <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
             <div>
               <label className='block text-sm font-medium text-gray-700'>
-                Price*
+                Giá*
               </label>
               <input
                 type='number'
@@ -222,7 +222,7 @@ const CreateProducts = () => {
 
             <div>
               <label className='block text-sm font-medium text-gray-700'>
-                Old Price
+                Giá cũ
               </label>
               <input
                 type='number'
@@ -239,7 +239,7 @@ const CreateProducts = () => {
           {/* Image Upload */}
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              Product Images*
+              Ảnh sản phẩm*
             </label>
             <div
               className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md ${

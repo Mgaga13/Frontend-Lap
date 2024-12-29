@@ -89,13 +89,13 @@ function ProductAdmin() {
         >
           <div className='flex flex-col sm:flex-row justify-between items-center mb-6'>
             <h1 className='text-2xl font-bold text-gray-800 mb-4 sm:mb-0'>
-              Product Management
+              Quản lý sản phẩm
             </h1>
             <button
               onClick={() => navigate("/dashboard/products/create-product")}
               className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors'
             >
-              Add New Product
+              Thêm mới sản phẩm
             </button>
           </div>
 

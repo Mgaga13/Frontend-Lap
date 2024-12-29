@@ -124,13 +124,13 @@ function BrandAdmin() {
         <div className='bg-white rounded-lg shadow-lg p-6'>
           <div className='flex flex-col sm:flex-row justify-between items-center mb-6'>
             <h1 className='text-2xl font-bold text-gray-800 mb-4 sm:mb-0'>
-              Brand Management
+              Quản lý nhãn hàng
             </h1>
             <button
               onClick={openModal}
               className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors'
             >
-              Add New Brand
+              Thêm nhãn hàng
             </button>
           </div>
           <div className='overflow-x-auto'>

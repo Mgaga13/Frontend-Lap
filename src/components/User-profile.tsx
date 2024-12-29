@@ -10,6 +10,8 @@ import {
 interface FormData {
   name: string;
   avatar: File | null; // Either a File object or null
+  gender: string;
+  dob: string;
   address: string;
   phone: string;
 }
@@ -21,6 +23,8 @@ export const UserProfile = () => {
     name: "",
     phone: "",
     avatar: null,
+    gender: "",
+    dob: "",
     address: "",
   });
 
@@ -36,13 +40,15 @@ export const UserProfile = () => {
         phone: listData.phone || "",
         avatar: null,
         address: listData.address || "",
+        gender: listData.gender || "Male",
+        dob: listData.dob || "",
       });
       setAvatarPreview(listData.avatar || "https://via.placeholder.com/150");
     }
   }, [listData]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -79,6 +85,8 @@ export const UserProfile = () => {
     const formDataToSend = new FormData();
     formDataToSend.append("name", formData.name);
     formDataToSend.append("phone", formData.phone);
+    formDataToSend.append("gender", formData.gender);
+    formDataToSend.append("dob", formData.dob);
     formDataToSend.append("address", formData.address);
     if (formData.avatar) {
       formDataToSend.append("avatar", formData.avatar);
@@ -106,39 +114,41 @@ export const UserProfile = () => {
 
   return (
     <div className='min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8'>
-      <div className='max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl'>
-        <div className='md:flex'>
-          <div className='p-8 w-full'>
+      <div className='max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden'>
+        <div className='flex flex-col md:flex-row'>
+          {/* Phần ảnh đại diện */}
+          <div className='flex justify-center items-center md:w-1/3 p-6 bg-gray-100'>
+            <div className='relative w-32 h-32'>
+              <img
+                src={avatarPreview}
+                alt='User avatar'
+                className='w-full h-full rounded-full object-cover'
+              />
+              <label
+                htmlFor='avatar-upload'
+                className='absolute bottom-0 right-0 bg-indigo-500 p-2 rounded-full cursor-pointer hover:bg-indigo-600 transition-colors'
+              >
+                <FaUser className='text-white' />
+              </label>
+              <input
+                id='avatar-upload'
+                type='file'
+                accept='image/*'
+                className='hidden'
+                onChange={handleAvatarChange}
+              />
+            </div>
+          </div>
+
+          {/* Phần thông tin người dùng */}
+          <div className='md:w-2/3 p-8'>
             <div className='uppercase tracking-wide text-sm text-indigo-500 font-semibold mb-1'>
-              Profile Settings
+              Thông tin cá nhân
             </div>
             <form onSubmit={handleSubmit} className='space-y-6'>
-              <div className='flex flex-col items-center'>
-                <div className='relative w-32 h-32 mb-4'>
-                  <img
-                    src={avatarPreview}
-                    alt='User avatar'
-                    className='w-full h-full rounded-full object-cover'
-                  />
-                  <label
-                    htmlFor='avatar-upload'
-                    className='absolute bottom-0 right-0 bg-indigo-500 p-2 rounded-full cursor-pointer hover:bg-indigo-600 transition-colors'
-                  >
-                    <FaUser className='text-white' />
-                  </label>
-                  <input
-                    id='avatar-upload'
-                    type='file'
-                    accept='image/*'
-                    className='hidden'
-                    onChange={handleAvatarChange}
-                  />
-                </div>
-              </div>
-
               <div>
                 <label className='block text-sm font-medium text-gray-700'>
-                  Name
+                  Tên
                 </label>
                 <div className='mt-1 relative rounded-md shadow-sm'>
                   <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
@@ -150,14 +160,42 @@ export const UserProfile = () => {
                     value={formData.name}
                     onChange={handleInputChange}
                     className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md'
-                    placeholder='Your Name'
+                    placeholder='Tên của bạn'
                   />
                 </div>
+              </div>
+              <div>
+                <label className='block text-sm font-medium text-gray-700'>
+                  Giới tính
+                </label>
+                <select
+                  name='gender'
+                  value={formData.gender}
+                  onChange={handleInputChange}
+                  className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-10 sm:text-sm border-gray-300 rounded-md'
+                >
+                  <option value='Male'>Nam</option>
+                  <option value='Female'>Nữ</option>
+                  <option value='Other'>Khác</option>
+                </select>
               </div>
 
               <div>
                 <label className='block text-sm font-medium text-gray-700'>
-                  Phone
+                  Ngày sinh
+                </label>
+                <input
+                  type='date'
+                  name='dateOfBirth'
+                  value={formData.dob}
+                  onChange={handleInputChange}
+                  className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 sm:text-sm border-gray-300 rounded-md'
+                />
+              </div>
+
+              <div>
+                <label className='block text-sm font-medium text-gray-700'>
+                  Số điện thoại
                 </label>
                 <div className='mt-1 relative rounded-md shadow-sm'>
                   <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
@@ -169,22 +207,21 @@ export const UserProfile = () => {
                     value={formData.phone}
                     onChange={handleInputChange}
                     className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md'
-                    placeholder='Your Phone Number'
+                    placeholder='Số điện thoại của bạn'
                   />
                 </div>
               </div>
 
               <div>
                 <label className='block text-sm font-medium text-gray-700'>
-                  Address
+                  Địa chỉ
                 </label>
-                <textarea
+                <input
                   name='address'
                   value={formData.address}
                   onChange={handleInputChange}
-                  rows={3}
                   className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md'
-                  placeholder='Your Address'
+                  placeholder='Địa chỉ của bạn'
                 />
               </div>
 
@@ -196,7 +233,7 @@ export const UserProfile = () => {
                     isSubmitting ? "opacity-75 cursor-not-allowed" : ""
                   }`}
                 >
-                  {isSubmitting ? "Updating..." : "Update Profile"}
+                  {isSubmitting ? "Chỉnh sửa..." : "Chỉnh sửa"}
                 </button>
               </div>
             </form>

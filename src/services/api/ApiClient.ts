@@ -61,6 +61,14 @@ export class ApiService {
       "Content-Type": "application/json",
     },
   });
+  changePassword = configApi({
+    path: "v1/auth/change-password",
+    method: "Post",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
 
   getAllProduct = configApi({
     // or pass query key = name to get a specific app
@@ -194,6 +202,15 @@ export class ApiService {
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
+
+  getProductDetail = configApi({
+    path: "v1/product/list",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
   editProduct = configApi({
     path: "v1/product/update",
     method: "POST",
@@ -347,6 +364,91 @@ export class ApiService {
     path: "v1/cart/user/count",
     method: "GET",
     headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+
+  createPaymentZaloPay = configApi({
+    path: "v1/payment/create",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  // checkPaymentZaloPay = configApi({
+  //   path: "v1/cart/user/count",
+  //   method: "GET",
+  //   headers: {
+  //     Authorization: `Bearer ${this.getAccessToken()}`,
+  //   },
+  // });
+
+  getStatisticRevenue = configApi({
+    path: "v1/report",
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  getStatisticRevenueMonth = configApi({
+    path: "v1/report/month",
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  getStatisticSellingProduct = configApi({
+    path: "v1/report/top-selling-products",
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+
+  // Feedback
+
+  createFeedback = configApi({
+    path: "v1/feedback",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+  getFeedback = configApi({
+    path: "v1/feedback/feedbackByProduct",
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+
+  // Order
+
+  getListOrder = configApi({
+    path: "v1/orders",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+
+  EditOrder = configApi({
+    path: "v1/orders",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
+
+  GetListOrderByUser = configApi({
+    path: "v1/orders",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });

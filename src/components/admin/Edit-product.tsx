@@ -142,12 +142,12 @@ const EditProduct = () => {
   return (
     <div className='min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8'>
       <div className='max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md'>
-        <h2 className='text-2xl font-bold text-gray-900 mb-8'>Edit Product</h2>
+        <h2 className='text-2xl font-bold text-gray-900 mb-8'>Sửa sản phẩm</h2>
         <form onSubmit={handleSubmit} className='space-y-6'>
           {/* Product Name */}
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              Product Name*
+              Tên sản phẩm*
             </label>
             <input
               type='text'
@@ -170,7 +170,7 @@ const EditProduct = () => {
                   htmlFor='brand'
                   className='block text-sm font-medium text-gray-700'
                 >
-                  Select Brand
+                  Chọn nhãn hàng
                 </label>
                 <select
                   name='brand_id'
@@ -178,7 +178,7 @@ const EditProduct = () => {
                   onChange={handleInputChange}
                   className='w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:border-gray-400 transition-colors duration-200'
                 >
-                  <option value=''>Choose a brand</option>
+                  <option value=''>Chọn 1 nhãn hàng</option>
                   {brands?.datas?.map((brand: any) => (
                     <option key={brand.id} value={brand.id}>
                       {brand.name}
@@ -192,7 +192,7 @@ const EditProduct = () => {
                   htmlFor='category'
                   className='block text-sm font-medium text-gray-700'
                 >
-                  Select Category
+                  Chọn thể loại
                 </label>
                 <select
                   name='category_id'
@@ -200,7 +200,7 @@ const EditProduct = () => {
                   onChange={handleInputChange}
                   className='w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:border-gray-400 transition-colors duration-200'
                 >
-                  <option value=''>Choose a category</option>
+                  <option value=''>Chọn một thể loại</option>
                   {categories?.datas?.map((category: any) => (
                     <option key={category.id} value={category.id}>
                       {category.name}
@@ -213,7 +213,7 @@ const EditProduct = () => {
           <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
             <div>
               <label className='block text-sm font-medium text-gray-700'>
-                Price*
+                Giá*
               </label>
               <input
                 type='number'
@@ -234,7 +234,7 @@ const EditProduct = () => {
 
             <div>
               <label className='block text-sm font-medium text-gray-700'>
-                Old Price
+                Giá cũ
               </label>
               <input
                 type='number'
@@ -250,7 +250,7 @@ const EditProduct = () => {
           </div>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              Product Images*
+              Ảnh sản phẩm*
             </label>
             <div
               className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md ${
@@ -337,7 +337,7 @@ const EditProduct = () => {
               } px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500`}
             />
             <p className='mt-1 text-sm text-gray-500'>
-              {formData.specification.length}/5000 characters
+              {formData?.specification?.length}/5000 characters
             </p>
             {errors.specification && (
               <p className='mt-1 text-sm text-red-500'>
@@ -348,7 +348,8 @@ const EditProduct = () => {
             <p className='mt-2 text-xs text-gray-500'>
               <pre className='bg-gray-100 p-4 rounded-md'>
                 <code className='text-xs text-gray-800'>
-                  {oldSpecification}
+                  {oldSpecification && oldSpecification}
+                  {/* {JSON.parse()} */}
                 </code>
               </pre>
             </p>

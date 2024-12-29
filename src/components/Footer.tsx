@@ -5,14 +5,14 @@ export default function Footer() {
   const currentYear = currentDate.getFullYear();
 
   return (
-    <footer className='bg-white mt-60'>
+    <footer className='bg-white mt-5'>
       <div className='mx-auto max-w-screen-2xl px-4 py-5 sm:px-6 lg:px-8 content'>
         <div className='grid grid-cols-1 gap-8 lg:grid-cols-3'>
           {/* LOGO & Description */}
           <div className='sm:block flex flex-col items-center'>
             <span className='sr-only'>cortex</span>
             <img
-              src='/cortex-svg.svg'
+              src='./image/logo.jpg'
               width={200}
               height={100}
               alt='cortex'
@@ -20,8 +20,10 @@ export default function Footer() {
             />
 
             <p className='mt-4 max-w-xs text-neutral-700 leading-relaxed text-center sm:text-left'>
-              The ultimate destination for high-quality tech products and the
-              latest gadgets, offering exceptional prices and top-notch service.
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Voluptatum molestiae hic culpa vel veniam eos dolore reiciendis
+              blanditiis, provident cumque. Sequi itaque molestiae nobis maxime
+              ratione, commodi magnam suscipit inventore.
             </p>
 
             <ul className='mt-8 flex gap-6'>
@@ -117,23 +119,21 @@ export default function Footer() {
 
               <ul className='mt-6 space-y-4 text-sm text-center sm:text-left'>
                 <li className='flex gap-2 items-center text-neutral-700 transition hover:opacity-75 cursor-pointer'>
-                  {/* <MailIcon className="size-5 shrink-0 text-neutral-900" /> */}
-
                   <span className='sm:flex-1 text-neutral-700'>
-                    cortex@contact.com
+                    test@contact.com
                   </span>
                 </li>
 
                 <li className='flex gap-2 items-center text-neutral-700 transition hover:opacity-75 cursor-pointer'>
                   {/* <PhoneIcon className="size-5 shrink-0" /> */}
 
-                  <span className='sm:flex-1'>0554 38 87 98</span>
+                  <span className='sm:flex-1'>099999999</span>
                 </li>
 
                 <li className='flex gap-2 items-center text-neutral-700 transition hover:opacity-75 cursor-pointer'>
                   {/* <MapPinIcon className="size-5 shrink-0" /> */}
 
-                  <span className='sm:flex-1'>Tiaret, Algeria</span>
+                  <span className='sm:flex-1'>Việt Nam</span>
                 </li>
               </ul>
             </div>
@@ -182,10 +182,10 @@ export default function Footer() {
         </div>
 
         <p className='w-full text-center text-neutral-700 mt-10 flex items-center gap-10 flex-wrap justify-center'>
-          <Link to='/'>Home</Link>
+          {/* <Link to='/'>Home</Link>
           <Link to='/shop'>Shop</Link>
           <Link to='/shop/cart'>Cart</Link>
-          <Link to='/blog'>Blog</Link>
+          <Link to='/blog'>Blog</Link> */}
         </p>
         <p className='w-full mt-5 text-sm text-center text-neutral-500'>
           &copy; {currentYear}. CORTEX Foundation, All rights reserved.

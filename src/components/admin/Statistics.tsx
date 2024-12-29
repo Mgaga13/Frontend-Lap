@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Bar } from "react-chartjs-2";
+import React, { useState, useEffect } from "react";
+import { Bar, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,7 +8,13 @@ import {
   Title,
   Tooltip,
   Legend,
+  ArcElement,
 } from "chart.js";
+import {
+  getStatisticMonth,
+  getStatisticRevenue,
+  getStatisticSelling,
+} from "../../services/react-query/query/statistic";
 
 ChartJS.register(
   CategoryScale,
@@ -16,31 +22,69 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ArcElement
 );
 
 function Statistics() {
+  const today = new Date();
+  const threeDaysAgo = new Date(today);
+  threeDaysAgo.setDate(today.getDate() - 3);
+
+  const [startDate, setStartDate] = useState(
+    threeDaysAgo.toISOString().split("T")[0]
+  );
+  const [endDate, setEndDate] = useState(today.toISOString().split("T")[0]);
+
+  const { data: revenueData, isLoading: isLoadingMonth } = getStatisticMonth({
+    startYear: "2024",
+    endYear: "2024",
+  });
+  const {
+    data: statisticDay,
+    refetch,
+    isLoading: isLoadingDay,
+  } = getStatisticRevenue({
+    startDate,
+    endDate,
+  });
+  useEffect(() => {
+    refetch();
+  }, [startDate, endDate]);
+  const { data: statisticTopSell, isLoading: isLoadingTopSell } =
+    getStatisticSelling({
+      limit: 5,
+    });
+
+  const labelSalesProduct = statisticTopSell?.map((value: any) =>
+    value.productName.length > 50
+      ? value.productName.substring(0, 50) + "..."
+      : value.productName
+  );
+  const dataSalesProduct = statisticTopSell?.map(
+    (value: any) => value.totalQuantity
+  );
+
   const productSalesData = {
-    labels: ["January", "February", "March", "April", "May", "June"],
+    labels: labelSalesProduct,
     datasets: [
       {
         label: "Products Sold",
-        data: [50, 75, 150, 200, 250, 300],
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const revenueData = {
-    labels: ["January", "February", "March", "April", "May", "June"],
-    datasets: [
-      {
-        label: "Revenue ($)",
-        data: [5000, 7500, 15000, 20000, 25000, 30000],
-        backgroundColor: "rgba(255, 99, 132, 0.6)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        data: dataSalesProduct,
+        backgroundColor: [
+          "rgba(75, 192, 192, 0.6)",
+          "rgba(255, 99, 132, 0.6)",
+          "rgba(255, 206, 86, 0.6)",
+          "rgba(54, 162, 235, 0.6)",
+          "rgba(153, 102, 255, 0.6)",
+        ],
+        borderColor: [
+          "rgba(75, 192, 192, 1)",
+          "rgba(255, 99, 132, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(153, 102, 255, 1)",
+        ],
         borderWidth: 1,
       },
     ],
@@ -48,30 +92,60 @@ function Statistics() {
 
   return (
     <div className='p-6 bg-gray-100'>
-      <h1 className='text-2xl font-bold mb-4'>Statistics</h1>
+      <h1 className='text-2xl font-bold mb-4'>Thông kê</h1>
+
+      <div className='flex flex-col sm:flex-row gap-4 mb-6'>
+        <div className='flex flex-col'>
+          <label htmlFor='startDate' className='mb-2 font-medium'>
+            Ngày bắt đầu
+          </label>
+          <input
+            id='startDate'
+            type='date'
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className='border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+          />
+        </div>
+
+        <div className='flex flex-col'>
+          <label htmlFor='endDate' className='mb-2 font-medium'>
+            Ngày kết thúc
+          </label>
+          <input
+            id='endDate'
+            type='date'
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className='border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+          />
+        </div>
+      </div>
 
       <div className='mb-6'>
-        <h2 className='text-xl font-semibold mb-2'>Product Sales</h2>
-        <Bar data={productSalesData} options={{ responsive: true }} />
+        <h2 className='text-xl font-semibold mb-2'>Sản phẩm bán chạy</h2>
+        <div style={{ width: "400px", height: "400px", margin: "0 auto" }}>
+          <Pie data={productSalesData} options={{ responsive: true }} />
+        </div>
       </div>
 
       <div className='mb-6'>
         <h2 className='text-xl font-semibold mb-2'>Revenue</h2>
-        <Bar data={revenueData} options={{ responsive: true }} />
+        {isLoadingMonth ? (
+          <div>loading...</div>
+        ) : (
+          <Bar data={revenueData} options={{ responsive: true }} />
+        )}
       </div>
 
       <div className='grid gap-4'>
         <div className='p-4 bg-white shadow rounded'>
-          <h3 className='text-lg font-medium'>Total Products</h3>
-          <p className='text-2xl font-bold'>150</p>
+          <h3 className='text-lg font-medium'>Total Order</h3>
+          <p className='text-2xl font-bold'>{statisticDay?.totalOrders}</p>
         </div>
         <div className='p-4 bg-white shadow rounded'>
           <h3 className='text-lg font-medium'>Total Sales</h3>
-          <p className='text-2xl font-bold'>$45,000</p>
-        </div>
-        <div className='p-4 bg-white shadow rounded'>
-          <h3 className='text-lg font-medium'>Total Orders</h3>
-          <p className='text-2xl font-bold'>320</p>
+          <p className='text-2xl font-bold'>{statisticDay?.totalRevenue}</p>
         </div>
       </div>
     </div>

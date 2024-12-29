@@ -1,16 +1,24 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FiMenu, FiShoppingCart, FiUser } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { useStore } from "../store";
-import { useCountCart } from "../services/react-query/query/cart";
+import { useCountCart } from "../services/react-query/query/cart"; // Hook lấy số lượng giỏ hàng
+import { SearchContext } from "./Layout";
+
 const Header = () => {
+  const { setSearch, totalCart, setTotalCart } = useContext(SearchContext);
   const { UserSlice, AuthSlice } = useStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const { data: count } = useCountCart();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // Số lượng sản phẩm trong giỏ hàng
+  const [searchQuery, setSearchQuery] = useState(""); // State cho tìm kiếm
   const router = useNavigate();
-  const navLinks = [{ title: "Home", href: "#" }];
+  const { data: count, isLoading } = useCountCart(); // API lấy số lượng giỏ hàng
+
+  useEffect(() => {
+    setTotalCart(count);
+  }, [count]);
 
   const handleLogout = () => {
     UserSlice.setIsLoggedIn(false);
@@ -20,31 +28,42 @@ const Header = () => {
     window.location.href = "/";
   };
 
+  const handleSearch = () => {
+    if (searchQuery.trim() !== "") {
+      setSearch(searchQuery);
+    }
+  };
+
   return (
     <header className='fixed top-0 left-0 w-full bg-white shadow-md z-50'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='flex items-center justify-between h-16'>
+        <div className='flex items-center justify-between h-16 content'>
           {/* Logo */}
-          <div className='flex-shrink-0'>
+          <a href='/' className='flex-shrink-0 cursor-pointer'>
             <img
               className='h-8 w-auto'
-              src='https://images.unsplash.com/photo-1599305445671-ac291c95aaa9'
+              src='./image/logo.jpg'
               alt='Company Logo'
             />
-          </div>
+          </a>
 
-          {/* Desktop Navigation */}
-          <nav className='hidden md:flex space-x-8'>
-            {navLinks.map((link) => (
-              <a
-                key={link.title}
-                href={link.href}
-                className='text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200'
-              >
-                {link.title}
-              </a>
-            ))}
-          </nav>
+          {/* Search Box */}
+          <div className='hidden md:flex items-center'>
+            <input
+              type='text'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()} // Nhấn Enter để tìm kiếm
+              placeholder='Tìm kiếm sản phẩm...'
+              className='border border-gray-300 rounded-lg px-4 py-2 w-72 focus:outline-none focus:ring-2 focus:ring-blue-500'
+            />
+            <button
+              onClick={handleSearch}
+              className='ml-2 p-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600'
+            >
+              Tìm kiếm
+            </button>
+          </div>
 
           {/* User Login and Cart Icons */}
           <div className='flex items-center space-x-4'>
@@ -66,6 +85,12 @@ const Header = () => {
                       Thông tin cá nhân
                     </Link>
                     <Link
+                      to='/user/order'
+                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                    >
+                      Đơn hàng của bạn
+                    </Link>
+                    <Link
                       to='/user/change-password'
                       className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
                     >
@@ -81,7 +106,6 @@ const Header = () => {
                 )}
               </div>
             ) : (
-              // Nếu chưa đăng nhập, hiển thị biểu tượng đăng nhập
               <Link
                 to='/sign-in'
                 className='flex items-center text-gray-600 hover:text-gray-900'
@@ -99,11 +123,11 @@ const Header = () => {
               }}
             >
               <FiShoppingCart className='h-6 w-6' />
-              {/* {count > 0 && ( */}
-              <span className='absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full'>
-                {3}
-              </span>
-              {/* )} */}
+              {totalCart > 0 && (
+                <span className='absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full'>
+                  {totalCart ?? "0"}
+                </span>
+              )}
             </button>
           </div>
 
@@ -123,23 +147,6 @@ const Header = () => {
           </div>
         </div>
       </div>
-
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className='md:hidden'>
-          <div className='px-2 pt-2 pb-3 space-y-1 sm:px-3'>
-            {navLinks.map((link) => (
-              <a
-                key={link.title}
-                href={link.href}
-                className='block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              >
-                {link.title}
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
     </header>
   );
 };

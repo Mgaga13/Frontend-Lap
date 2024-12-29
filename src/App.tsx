@@ -10,9 +10,7 @@ import UserAdmin from "./components/admin/User-Admin";
 import ProductAdmin from "./components/admin/Product-admin";
 import CategoryAdmin from "./components/admin/Category-admin";
 import Statistics from "./components/admin/Statistics";
-import SalesPage from "./components/Detail";
 import AuthForm from "./pages/Auth/AuthForm";
-import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreateProducts from "./components/admin/Create-products";
 import EditProduct from "./components/admin/Edit-product";
@@ -20,6 +18,8 @@ import BrandAdmin from "./components/admin/Brand-admin";
 import BannerAdmin from "./components/admin/Banner-admin";
 import { UserProfile } from "./components/User-profile";
 import ChangePassword from "./pages/Client/ChangePassword";
+import Checkout from "./pages/Client/Checkout";
+import OrderHistory from "./components/OrderHistory";
 function App() {
   return (
     <Routes>
@@ -38,7 +38,7 @@ function App() {
                 />
                 <Route path='products/edit/:id' element={<EditProduct />} />
                 <Route path='categories' element={<CategoryAdmin />} />
-                BannerAdmin
+                <Route path='order' element={<ProductDetail />} />
                 <Route path='brand' element={<BrandAdmin />} />
                 <Route path='banner' element={<BannerAdmin />} />
                 <Route path='reports' element={<Statistics />} />
@@ -57,8 +57,11 @@ function App() {
               <Route path='/' index element={<Home />} />
               <Route path='/cart' element={<Cart />} />
               <Route path='/product' element={<ProductDetail />} />
+              <Route path='user/order' element={<OrderHistory />} />
+              <Route path='products/:id' element={<ProductDetail />} />
               {/* <Route path='/test' element={<SalesPage />} /> */}
               <Route path='/user/profile' element={<UserProfile />} />
+              <Route path='/payment/payment-success' element={<Checkout />} />
               <Route
                 path='/user/change-password'
                 element={<ChangePassword />}

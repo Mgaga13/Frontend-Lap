@@ -104,13 +104,13 @@ const BannerAdmin = () => {
       <ToastContainer position='top-right' autoClose={3000} />
 
       <div className='flex justify-between items-center mb-8'>
-        <h1 className='text-3xl font-bold text-gray-800'>Banner Management</h1>
+        <h1 className='text-3xl font-bold text-gray-800'>Quảng cáo</h1>
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
             className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center'
           >
-            <FaImage className='mr-2' /> Add New Banner
+            <FaImage className='mr-2' /> Thêm mới quảng cáo
           </button>
         )}
       </div>
@@ -119,7 +119,7 @@ const BannerAdmin = () => {
         <div className='bg-white p-6 rounded-lg shadow-lg'>
           <div className='flex justify-between items-center mb-6'>
             <h2 className='text-2xl font-semibold'>
-              {selectedBanner ? "Edit Banner" : "Add New Banner"}
+              {selectedBanner ? "Sửa quảng cáo" : "Thêm quảng cáo"}
             </h2>
             <button
               onClick={() => setIsEditing(false)}
@@ -129,16 +129,6 @@ const BannerAdmin = () => {
             </button>
           </div>
           <form onSubmit={handleSubmit} className='space-y-6'>
-            <div>
-              <label className='block text-gray-700 mb-2'>Title</label>
-              <input
-                type='text'
-                name='title'
-                value={formData.title}
-                onChange={handleChange}
-                className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500'
-              />
-            </div>
             <div>
               <label className='block text-gray-700 mb-2'>Image</label>
               <input
@@ -155,29 +145,19 @@ const BannerAdmin = () => {
                 />
               )}
             </div>
-            <div>
-              <label className='block text-gray-700 mb-2'>Description</label>
-              <textarea
-                name='content'
-                value={formData.content}
-                onChange={handleChange}
-                className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500'
-                rows={4}
-              />
-            </div>
             <div className='flex justify-end space-x-4'>
               <button
                 type='button'
                 onClick={() => setIsEditing(false)}
                 className='px-6 py-2 border rounded-lg hover:bg-gray-100'
               >
-                Cancel
+                Hủy
               </button>
               <button
                 type='submit'
                 className='px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600'
               >
-                {selectedBanner ? "Update" : "Save"}
+                {selectedBanner ? "Cập nhật" : "Tạo"}
               </button>
             </div>
           </form>

@@ -34,19 +34,19 @@ const AuthForm = () => {
   const validateForm = () => {
     const newErrors: any = {};
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = "Yêu cầu email";
     }
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
     }
     if (!isLogin) {
       if (!formData.name.trim()) {
-        newErrors.name = "Name is required";
+        newErrors.name = "Yêu cầu tên";
       }
       if (!formData.confirmPassword.trim()) {
-        newErrors.confirmPassword = "Confirm Password is required";
+        newErrors.confirmPassword = "Yêu cầu xác thực mật khẩu";
       } else if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = "Passwords do not match";
+        newErrors.confirmPassword = "Mật khẩu không trùng";
       }
     }
     setErrors(newErrors);
@@ -98,7 +98,7 @@ const AuthForm = () => {
       <div className='max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg'>
         <div>
           <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
-            {isLogin ? "Sign in to your account" : "Create your account"}
+            {isLogin ? "Đăng nhập tài khoản" : "Tạo tài khoản"}
           </h2>
         </div>
         <form className='mt-8 space-y-6' onSubmit={handleSubmit}>
@@ -121,7 +121,7 @@ const AuthForm = () => {
                     className={`appearance-none relative block w-full px-3 py-2 border ${
                       errors.name ? "border-red-500" : "border-gray-300"
                     } placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-                    placeholder='Enter your full name'
+                    placeholder='Nhập tên ở đây'
                     value={formData.name}
                     onChange={handleChange}
                   />
@@ -139,7 +139,7 @@ const AuthForm = () => {
                 htmlFor='email'
                 className='block text-sm font-medium text-gray-700'
               >
-                Email address
+                Email
               </label>
               <div className='mt-1'>
                 <input
@@ -151,7 +151,7 @@ const AuthForm = () => {
                   className={`appearance-none relative block w-full px-3 py-2 border ${
                     errors.email ? "border-red-500" : "border-gray-300"
                   } placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-                  placeholder='Enter your email'
+                  placeholder='Nhập email ở đây'
                   value={formData.email}
                   onChange={handleChange}
                 />
@@ -168,7 +168,7 @@ const AuthForm = () => {
                 htmlFor='password'
                 className='block text-sm font-medium text-gray-700'
               >
-                Password
+                Mật khẩu
               </label>
               <div className='mt-1 relative'>
                 <input
@@ -180,7 +180,7 @@ const AuthForm = () => {
                   className={`appearance-none relative block w-full px-3 py-2 border ${
                     errors.password ? "border-red-500" : "border-gray-300"
                   } placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-                  placeholder='Enter your password'
+                  placeholder='Nhập mật khẩu'
                   value={formData.password}
                   onChange={handleChange}
                 />
@@ -209,7 +209,7 @@ const AuthForm = () => {
                   htmlFor='confirmPassword'
                   className='block text-sm font-medium text-gray-700'
                 >
-                  Confirm Password
+                  Xác nhận mật khẩu
                 </label>
                 <div className='mt-1'>
                   <input
@@ -222,7 +222,7 @@ const AuthForm = () => {
                         ? "border-red-500"
                         : "border-gray-300"
                     } placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-                    placeholder='Confirm your password'
+                    placeholder='Xác nhận mật khẩu'
                     value={formData.confirmPassword}
                     onChange={handleChange}
                   />
@@ -236,7 +236,7 @@ const AuthForm = () => {
             )}
           </div>
           {isError ? (
-            <div className='text-red-500'>Email or Password is incorrect</div>
+            <div className='text-red-500'>Email hoặc mật khẩu không đúng</div>
           ) : (
             ""
           )}
@@ -247,7 +247,7 @@ const AuthForm = () => {
                   to={"/reset-password"}
                   className='font-medium text-indigo-600 hover:text-indigo-500'
                 >
-                  Forgot your password?
+                  Quên mật khẩu?
                 </Link>
               </div>
             </div>
@@ -258,7 +258,7 @@ const AuthForm = () => {
               type='submit'
               className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200'
             >
-              {isLogin ? "Sign in" : "Sign up"}
+              {isLogin ? "Đăng nhập" : "Đăng ký"}
             </button>
           </div>
 
@@ -269,8 +269,8 @@ const AuthForm = () => {
               onClick={() => setIsLogin(!isLogin)}
             >
               {isLogin
-                ? "Need an account? Sign up"
-                : "Already have an account? Sign in"}
+                ? "Bạn cần tạo tài khoản? Đăng ký"
+                : "Bạn đã có tài khoản ? Đăng nhập"}
             </button>
           </div>
         </form>
