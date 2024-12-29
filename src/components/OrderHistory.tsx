@@ -1,28 +1,26 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi"; // Import biểu tượng
+import { useGetListOrderUser } from "../services/react-query/query/user";
+import { formatVND } from "../utils/formatprice";
+import { useCreateFeedback } from "../services/react-query/query/feedback";
 
 const OrderHistory = () => {
-  const orders = [
-    {
-      id: 1,
-      productName: "Sản phẩm A",
-      quantity: 2,
-      price: 100000,
-      productId: 123,
-    },
-    {
-      id: 2,
-      productName: "Sản phẩm B",
-      quantity: 1,
-      price: 200000,
-      productId: 124,
-    },
-  ];
-
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const { data: listOrder, isLoading } = useGetListOrderUser({
+    limit,
+    page,
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [openAccordion, setOpenAccordion] = useState<string | null>(null);
+  const { mutate: createFeedback } = useCreateFeedback();
+  const handleToggleAccordion = (orderId: string) => {
+    setOpenAccordion((prev) => (prev === orderId ? null : orderId));
+  };
 
   const handleRating = (productId: any) => {
     setSelectedProductId(productId);
@@ -30,11 +28,12 @@ const OrderHistory = () => {
   };
 
   const handleSubmitReview = () => {
-    console.log("Đánh giá sản phẩm", {
-      productId: selectedProductId,
-      rating,
-      comment,
+    createFeedback({
+      content: comment,
+      productId: selectedProductId + "",
+      star: rating,
     });
+
     setIsModalOpen(false);
   };
 
@@ -42,30 +41,69 @@ const OrderHistory = () => {
     <div className='p-6 content'>
       <h1 className='text-2xl font-bold mb-4'>Lịch Sử Mua Hàng</h1>
       <div className='space-y-4'>
-        {orders.map((order) => (
-          <div
-            key={order.id}
-            className='flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow-md'
-          >
-            <div className='flex flex-col'>
-              <span className='font-medium text-lg'>{order.productName}</span>
-              <span className='text-sm text-gray-600'>
-                Số lượng: {order.quantity}
-              </span>
-              <span className='text-sm text-gray-600'>
-                Tổng giá:{" "}
-                {new Intl.NumberFormat("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                }).format(order.price * order.quantity)}
+        {listOrder?.datas?.map((order: any) => (
+          <div key={order.id} className='border rounded-lg shadow-md'>
+            {/* Accordion Header */}
+            <div
+              className='flex justify-between items-center bg-gray-200 p-4 cursor-pointer'
+              onClick={() => handleToggleAccordion(order.id)}
+            >
+              <div>
+                <span className='block font-medium text-lg'>
+                  Thông tin đơn hàng
+                </span>
+                <span className='block text-gray-600'>
+                  Hình thức thanh toán: {order.paymentMethod}
+                </span>
+                <span className='text-sm text-gray-600'>
+                  Ngày tạo: {new Date(order.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+              {/* Biểu tượng mũi tên */}
+              <span className='text-lg'>
+                {openAccordion === order.id ? (
+                  <FiChevronUp />
+                ) : (
+                  <FiChevronDown />
+                )}
               </span>
             </div>
-            <button
-              onClick={() => handleRating(order.productId)}
-              className='bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600'
-            >
-              Đánh giá sản phẩm
-            </button>
+            {/* Accordion Body */}
+            {openAccordion === order.id && (
+              <div className='bg-white p-4 space-y-2'>
+                {order.orderDetails?.length > 0 ? (
+                  order.orderDetails.map((detail: any) => (
+                    <div
+                      key={detail.id}
+                      className='flex justify-between items-center border-b py-2'
+                    >
+                      <div>
+                        <span className='block font-medium'>
+                          Sản phẩm: {detail.product.name}
+                        </span>
+                        <span className='block font-medium'>
+                          Trạng thái:{" "}
+                          {detail.status == 0 ? "Xử lý" : "Thành Công"}
+                        </span>
+                        <span className='text-sm text-gray-600'>
+                          Giá: {formatVND(detail.price)}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handleRating(detail.product.id)}
+                        className='bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600'
+                      >
+                        Đánh giá
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className='text-sm text-gray-500'>
+                    Không có sản phẩm nào trong đơn hàng này.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>

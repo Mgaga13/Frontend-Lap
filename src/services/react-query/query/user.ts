@@ -340,3 +340,24 @@ export const useChangePassword = () => {
     }
   );
 };
+
+export const useGetListOrderUser = (params: List) => {
+  const getListUserService = ApiService.createInstance();
+  return useQuery(
+    ["getListOrderUser", params.page],
+    () => {
+      const queryParams: any = {
+        page: params.page,
+        limit: params.limit,
+      };
+      return getListUserService.orderByUser({
+        queryParams,
+      });
+    },
+    {
+      onSuccess: () => {
+        // Xử lý thành công nếu cần thiết
+      },
+    }
+  );
+};

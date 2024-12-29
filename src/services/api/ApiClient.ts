@@ -178,6 +178,13 @@ export class ApiService {
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
+  orderByUser = configApi({
+    path: "v1/orders/user",
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
   // product
   getListProduct = configApi({
     path: "v1/product/list",
