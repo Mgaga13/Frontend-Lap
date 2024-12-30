@@ -30,8 +30,8 @@ const FilterBar: React.FC<FilterProps> = ({ onFilter }) => {
 
   const priceRanges = [
     { label: "Tất cả", value: "all" },
-    { label: "Giảm dần", value: 1 },
-    { label: "Tăng dần", value: 2 },
+    { label: "Giảm dần", value: 2 },
+    { label: "Tăng dần", value: 1 },
   ];
 
   // Update parent component whenever filters change

@@ -28,9 +28,7 @@ export const UserProfile = () => {
     address: "",
   });
 
-  const [avatarPreview, setAvatarPreview] = useState(
-    "https://via.placeholder.com/150"
-  );
+  const [avatarPreview, setAvatarPreview] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -43,7 +41,7 @@ export const UserProfile = () => {
         gender: listData.gender || "Male",
         dob: listData.dob || "",
       });
-      setAvatarPreview(listData.avatar || "https://via.placeholder.com/150");
+      setAvatarPreview(listData.avatar);
     }
   }, [listData]);
 
@@ -111,16 +109,17 @@ export const UserProfile = () => {
   if (isLoading) {
     return <div className='text-center py-6'>Loading...</div>;
   }
-
   return (
     <div className='min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8'>
       <div className='max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden'>
         <div className='flex flex-col md:flex-row'>
           {/* Phần ảnh đại diện */}
           <div className='flex justify-center items-center md:w-1/3 p-6 bg-gray-100'>
-            <div className='relative w-32 h-32'>
+            <div className='relative w-40 h-40'>
               <img
-                src={avatarPreview}
+                src={
+                  avatarPreview ? avatarPreview : "/image/avatar-default.png"
+                }
                 alt='User avatar'
                 className='w-full h-full rounded-full object-cover'
               />
@@ -159,7 +158,7 @@ export const UserProfile = () => {
                     name='name'
                     value={formData.name}
                     onChange={handleInputChange}
-                    className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md'
+                    className='focus:ring-indigo-500 pt-2 pb-2 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md'
                     placeholder='Tên của bạn'
                   />
                 </div>
@@ -172,7 +171,7 @@ export const UserProfile = () => {
                   name='gender'
                   value={formData.gender}
                   onChange={handleInputChange}
-                  className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-10 sm:text-sm border-gray-300 rounded-md'
+                  className='focus:ring-indigo-500 pt-2 pb-2 focus:border-indigo-500 block w-full pl-3 pr-10 sm:text-sm border-gray-300 rounded-md'
                 >
                   <option value='Male'>Nam</option>
                   <option value='Female'>Nữ</option>
@@ -186,10 +185,10 @@ export const UserProfile = () => {
                 </label>
                 <input
                   type='date'
-                  name='dateOfBirth'
+                  name='dob'
                   value={formData.dob}
                   onChange={handleInputChange}
-                  className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 sm:text-sm border-gray-300 rounded-md'
+                  className='focus:ring-indigo-500 pt-2 pb-2 focus:border-indigo-500 block w-full pl-3 sm:text-sm border-gray-300 rounded-md'
                 />
               </div>
 
@@ -206,7 +205,7 @@ export const UserProfile = () => {
                     name='phone'
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md'
+                    className='focus:ring-indigo-500 pt-2 pb-2 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md'
                     placeholder='Số điện thoại của bạn'
                   />
                 </div>
@@ -220,7 +219,7 @@ export const UserProfile = () => {
                   name='address'
                   value={formData.address}
                   onChange={handleInputChange}
-                  className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md'
+                  className='focus:ring-indigo-500 pt-2 pb-2 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md'
                   placeholder='Địa chỉ của bạn'
                 />
               </div>

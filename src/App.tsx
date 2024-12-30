@@ -20,60 +20,70 @@ import { UserProfile } from "./components/User-profile";
 import ChangePassword from "./pages/Client/ChangePassword";
 import Checkout from "./pages/Client/Checkout";
 import OrderHistory from "./components/OrderHistory";
+import OrderAdmin from "./components/admin/Order-admin";
+import ScrollToTop from "./components/hooks/ccrollToTop";
+import Dashboard from "./components/Dashboard";
 function App() {
   return (
-    <Routes>
-      {/* Admin Routes */}
-      <Route
-        path='/dashboard/*'
-        element={
-          <ProtectedRoute>
-            <AdminLayout>
-              <Routes>
-                <Route path='users' element={<UserAdmin />} />
-                <Route path='products' element={<ProductAdmin />} />
-                <Route
-                  path='products/create-product'
-                  element={<CreateProducts />}
-                />
-                <Route path='products/edit/:id' element={<EditProduct />} />
-                <Route path='categories' element={<CategoryAdmin />} />
-                <Route path='order' element={<ProductDetail />} />
-                <Route path='brand' element={<BrandAdmin />} />
-                <Route path='banner' element={<BannerAdmin />} />
-                <Route path='reports' element={<Statistics />} />
-              </Routes>
-            </AdminLayout>
-          </ProtectedRoute>
-        }
-      />
+    <>
+      <ScrollToTop />
+      <Routes>
+        {/* Admin Routes */}
+        <Route
+          path='/dashboard/*'
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <Routes>
+                  <Route path='/' element={<Dashboard />} />
+                  <Route path='users' element={<UserAdmin />} />
+                  <Route path='products' element={<ProductAdmin />} />
+                  <Route
+                    path='products/create-product'
+                    element={<CreateProducts />}
+                  />
+                  <Route path='products/edit/:id' element={<EditProduct />} />
+                  <Route path='categories' element={<CategoryAdmin />} />
+                  <Route path='order' element={<OrderAdmin />} />
+                  <Route path='brand' element={<BrandAdmin />} />
+                  <Route path='banner' element={<BannerAdmin />} />
+                  <Route path='reports' element={<Statistics />} />
+                </Routes>
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Public Routes */}
-      <Route
-        path='/*'
-        element={
-          <Layout>
-            <Routes>
-              <Route path='/' index element={<Home />} />
-              <Route path='/cart' element={<Cart />} />
-              <Route path='/product' element={<ProductDetail />} />
-              <Route path='user/order' element={<OrderHistory />} />
-              <Route path='products/:id' element={<ProductDetail />} />
-              {/* <Route path='/test' element={<SalesPage />} /> */}
-              <Route path='/user/profile' element={<UserProfile />} />
-              <Route path='/payment/payment-success' element={<Checkout />} />
-              <Route
-                path='/user/change-password'
-                element={<ChangePassword />}
-              />
-              <Route path='/user/reset-password' element={<ChangePassword />} />
-            </Routes>
-          </Layout>
-        }
-      />
-      <Route path='/sign-in' element={<AuthForm />} />
-      <Route path='/reset-password' element={<ForgetPassword />} />
-    </Routes>
+        {/* Public Routes */}
+        <Route
+          path='/*'
+          element={
+            <Layout>
+              <Routes>
+                <Route path='/' index element={<Home />} />
+                <Route path='/cart' element={<Cart />} />
+                <Route path='/product' element={<ProductDetail />} />
+                <Route path='user/order' element={<OrderHistory />} />
+                <Route path='products/:id' element={<ProductDetail />} />
+                {/* <Route path='/test' element={<SalesPage />} /> */}
+                <Route path='/user/profile' element={<UserProfile />} />
+                <Route path='/payment/payment-success' element={<Checkout />} />
+                <Route
+                  path='/user/change-password'
+                  element={<ChangePassword />}
+                />
+                <Route
+                  path='/user/reset-password'
+                  element={<ChangePassword />}
+                />
+              </Routes>
+            </Layout>
+          }
+        />
+        <Route path='/sign-in' element={<AuthForm />} />
+        <Route path='/reset-password' element={<ForgetPassword />} />
+      </Routes>
+    </>
   );
 }
 

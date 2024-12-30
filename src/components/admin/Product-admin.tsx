@@ -16,6 +16,7 @@ import {
   useRemoveProduct,
 } from "../../services/react-query/query/product";
 import { useNavigate } from "react-router-dom";
+import { formatVND } from "../../utils/formatprice";
 
 interface FormData {
   price: string;
@@ -147,10 +148,10 @@ function ProductAdmin() {
                       {product.name}
                     </td>
                     <td className='px-6 py-4  max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
-                      {product.price}
+                      {formatVND(product.price)}
                     </td>
                     <td className='px-6 py-4  max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
-                      {product.oldprice}
+                      {formatVND(product.oldprice)}
                     </td>
                     <td className='px-6 py-4 max-w-[200px] truncate whitespace-nowrap text-sm text-gray-500'>
                       {product.description}

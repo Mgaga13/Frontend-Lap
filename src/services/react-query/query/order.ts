@@ -28,7 +28,7 @@ export const useGetListOrder = (params: any) => {
         page: params.page,
         limit: params.limit,
       };
-      return getProductService.getListProduct({
+      return getProductService.getListOrder({
         queryParams,
       });
     },

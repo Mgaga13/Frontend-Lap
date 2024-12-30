@@ -25,9 +25,15 @@ const Sidebar = () => {
     >
       {/* Sidebar Header */}
       <div className='flex items-center justify-between p-4 border-b border-gray-700'>
-        <span className={`font-bold text-xl ${!isOpen && "hidden"}`}>
-          Admin
-        </span>
+        <Link to={"/dashboard"}>
+          <span
+            className={`font-bold text-xl ${
+              !isOpen && "hidden"
+            } cursor-pointer`}
+          >
+            Admin
+          </span>
+        </Link>
         <button
           className='text-gray-400 hover:text-white focus:outline-none'
           onClick={toggleSidebar}
@@ -62,6 +68,13 @@ const Sidebar = () => {
               className={`${!isOpen && "hidden"}`}
             >
               Categories
+            </Link>
+          </li>
+
+          <li className='px-4 py-3 hover:bg-gray-700 cursor-pointer flex items-center'>
+            <FaListAlt className='mr-3' />
+            <Link to='/dashboard/order' className={`${!isOpen && "hidden"}`}>
+              Order
             </Link>
           </li>
           <li className='px-4 py-3 hover:bg-gray-700 cursor-pointer flex items-center'>

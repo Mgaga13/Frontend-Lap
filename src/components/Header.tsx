@@ -14,12 +14,15 @@ const Header = () => {
   // Số lượng sản phẩm trong giỏ hàng
   const [searchQuery, setSearchQuery] = useState(""); // State cho tìm kiếm
   const router = useNavigate();
-  const { data: count, isLoading } = useCountCart(); // API lấy số lượng giỏ hàng
+  const { data: count, isLoading, refetch, isSuccess } = useCountCart(); // API lấy số lượng giỏ hàng
 
   useEffect(() => {
     setTotalCart(count);
   }, [count]);
-
+  useEffect(() => {
+    refetch();
+    console.log("Refetching cart count");
+  }, [isSuccess]);
   const handleLogout = () => {
     UserSlice.setIsLoggedIn(false);
     AuthSlice.setAccessToken(null);
@@ -42,7 +45,7 @@ const Header = () => {
           <a href='/' className='flex-shrink-0 cursor-pointer'>
             <img
               className='h-8 w-auto'
-              src='./image/logo.jpg'
+              src='/image/logo.jpg'
               alt='Company Logo'
             />
           </a>

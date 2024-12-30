@@ -6,7 +6,6 @@ export const getStatisticRevenue = (params: any) => {
   return useQuery(
     ["getStatistic"],
     () => {
-      console.log(params);
       const queryParams: any = {
         startDate: params.startDate,
         endDate: params.endDate,
@@ -22,6 +21,7 @@ export const getStatisticRevenue = (params: any) => {
     }
   );
 };
+
 export const getStatisticMonth = (params: any) => {
   const getProductService = ApiService.createInstance();
   return useQuery(
@@ -49,6 +49,8 @@ export const getStatisticSelling = (params: any) => {
     () => {
       const queryParams: any = {
         limit: params.limit,
+        startDate: params.startDate,
+        endDate: params.endDate,
       };
       return getProductService.getStatisticSellingProduct({
         queryParams,

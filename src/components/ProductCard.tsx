@@ -12,7 +12,7 @@ const ProductCard = ({ product }: any) => {
 
   const router = useNavigate();
   const { UserSlice, AuthSlice } = useStore();
-  const { title, description, price, image, oldprice, id } = product;
+  const { name, description, price, image, oldprice, id } = product;
   const { mutate: createCart } = useCreateCart();
 
   const handleAddToCart = (event: React.MouseEvent) => {
@@ -37,18 +37,20 @@ const ProductCard = ({ product }: any) => {
   };
   return (
     <div
-      className='max-w-xs rounded-lg overflow-hidden shadow-lg bg-white transform transition duration-300 hover:scale-105'
-      onClick={handleProductClick} // Thêm sự kiện click vào toàn bộ product card
+      className='max-w-xs rounded-lg cursor-pointer overflow-hidden shadow-lg bg-white transform transition duration-300 hover:scale-105'
+      onClick={handleProductClick}
     >
       <div className='relative h-48 overflow-hidden'>
-        <img src={image} alt={title} className='w-full h-full object-cover' />
+        <img src={image[0]} alt={name} className='w-full h-full object-cover' />
       </div>
 
       <div className='p-4'>
-        <h2 className='text-lg font-bold mb-2 text-gray-800'>{title}</h2>
-        <p className='text-gray-600 text-sm mb-4 text-ellipsis h-14 overflow-hidden line-clamp-3'>
+        <h2 className='ttext-gray-600 text-sm mb-4 text-ellipsis h-14 overflow-hidden line-clamp-3'>
+          {name}
+        </h2>
+        {/* <p className='text-gray-600 text-sm mb-4 text-ellipsis h-14 overflow-hidden line-clamp-3'>
           {description}
-        </p>
+        </p> */}
 
         <div className='gap-2 mb-4 '>
           {oldprice != 0 && (

@@ -15,22 +15,38 @@ const AuthForm = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState<any>({});
   const [showPassword, setShowPassword] = useState(false);
-  const { isLoading, isError, mutate: login } = useLogin();
+  const { isLoading, isError: errorLogin, mutate: login } = useLogin();
   const { UserSlice } = useStore();
-  const { mutate: register, isSuccess: registerSuc } = useSignup();
+  const {
+    mutate: register,
+    isSuccess: registerSuc,
+    isError: errorSign,
+  } = useSignup();
+
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    // Reset individual field errors
     if (errors[name]) {
       setErrors((prev: any) => ({
         ...prev,
         [name]: "",
       }));
     }
+
+    // Reset global errors when interacting with email field
+    if (name === "email") {
+      setErrors((prev: any) => ({
+        ...prev,
+        global: "",
+      }));
+    }
   };
+
   const validateForm = () => {
     const newErrors: any = {};
     if (!formData.email.trim()) {
@@ -88,7 +104,6 @@ const AuthForm = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  console.log(registerSuc);
   useEffect(() => {
     setIsLogin(!isLogin);
   }, [registerSuc]);
@@ -235,8 +250,13 @@ const AuthForm = () => {
               </div>
             )}
           </div>
-          {isError ? (
+          {errorLogin ? (
             <div className='text-red-500'>Email hoặc mật khẩu không đúng</div>
+          ) : (
+            ""
+          )}
+          {errorSign ? (
+            <div className='text-red-500'>Vui lòng tạo tài khoản khác</div>
           ) : (
             ""
           )}

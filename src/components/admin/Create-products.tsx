@@ -204,13 +204,11 @@ const CreateProducts = () => {
                 Giá*
               </label>
               <input
-                type='number'
+                type='text'
                 name='price'
                 value={formData.price}
                 onChange={handleInputChange}
-                step='0.01'
-                min='0'
-                placeholder='0.00'
+                placeholder='10000'
                 className={`mt-1 block w-full rounded-md border ${
                   errors.price ? "border-red-500" : "border-gray-300"
                 } px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500`}
@@ -218,22 +216,6 @@ const CreateProducts = () => {
               {errors.price && (
                 <p className='mt-1 text-sm text-red-500'>{errors.price}</p>
               )}
-            </div>
-
-            <div>
-              <label className='block text-sm font-medium text-gray-700'>
-                Giá cũ
-              </label>
-              <input
-                type='number'
-                name='oldPrice'
-                value={formData.oldPrice}
-                onChange={handleInputChange}
-                step='0.01'
-                min='0'
-                placeholder='0.00'
-                className='mt-1 block w-full rounded-md  border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
-              />
             </div>
           </div>
           {/* Image Upload */}
@@ -268,7 +250,7 @@ const CreateProducts = () => {
                   htmlFor='file-upload'
                   className='cursor-pointer py-2 px-3 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50'
                 >
-                  Select Images
+                  Chọn ảnh
                 </label>
               </div>
             </div>
@@ -290,7 +272,7 @@ const CreateProducts = () => {
           </div>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              Description*
+              Mô tả*
             </label>
             <textarea
               name='description'
@@ -304,7 +286,7 @@ const CreateProducts = () => {
               } px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500`}
             />
             <p className='mt-1 text-sm text-gray-500'>
-              {formData.description.length}/5000 characters
+              {formData.description.length}
             </p>
             {errors.description && (
               <p className='mt-1 text-sm text-red-500'>{errors.description}</p>
@@ -312,7 +294,7 @@ const CreateProducts = () => {
           </div>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              specification*
+              Thông số kỹ thuật*
             </label>
             <textarea
               name='specification'
@@ -326,7 +308,7 @@ const CreateProducts = () => {
               } px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500`}
             />
             <p className='mt-1 text-sm text-gray-500'>
-              {formData.specification.length}/5000 characters
+              {formData.specification.length}
             </p>
             {errors.specification && (
               <p className='mt-1 text-sm text-red-500'>
@@ -355,7 +337,7 @@ const CreateProducts = () => {
           </div>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              Quantity*
+              Số lượng*
             </label>
             <input
               type='number'
@@ -379,7 +361,7 @@ const CreateProducts = () => {
               type='submit'
               className='w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
             >
-              Create Product
+              Tạo sản phẩm
             </button>
           </div>
         </form>

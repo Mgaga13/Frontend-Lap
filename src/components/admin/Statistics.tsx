@@ -11,10 +11,10 @@ import {
   ArcElement,
 } from "chart.js";
 import {
-  getStatisticMonth,
   getStatisticRevenue,
   getStatisticSelling,
 } from "../../services/react-query/query/statistic";
+import { formatVND } from "../../utils/formatprice";
 
 ChartJS.register(
   CategoryScale,
@@ -29,32 +29,26 @@ ChartJS.register(
 function Statistics() {
   const today = new Date();
   const threeDaysAgo = new Date(today);
-  threeDaysAgo.setDate(today.getDate() - 3);
+  threeDaysAgo.setDate(today.getDate() + 1 - 3);
 
   const [startDate, setStartDate] = useState(
     threeDaysAgo.toISOString().split("T")[0]
   );
   const [endDate, setEndDate] = useState(today.toISOString().split("T")[0]);
-
-  const { data: revenueData, isLoading: isLoadingMonth } = getStatisticMonth({
-    startYear: "2024",
-    endYear: "2024",
-  });
-  const {
-    data: statisticDay,
-    refetch,
-    isLoading: isLoadingDay,
-  } = getStatisticRevenue({
+  const { data: statisticDay, refetch } = getStatisticRevenue({
     startDate,
     endDate,
   });
-  useEffect(() => {
-    refetch();
-  }, [startDate, endDate]);
-  const { data: statisticTopSell, isLoading: isLoadingTopSell } =
+  const { data: statisticTopSell, refetch: topQuatitySell } =
     getStatisticSelling({
       limit: 5,
+      startDate,
+      endDate,
     });
+  useEffect(() => {
+    refetch();
+    topQuatitySell();
+  }, [startDate, endDate]);
 
   const labelSalesProduct = statisticTopSell?.map((value: any) =>
     value.productName.length > 50
@@ -89,10 +83,9 @@ function Statistics() {
       },
     ],
   };
-
   return (
     <div className='p-6 bg-gray-100'>
-      <h1 className='text-2xl font-bold mb-4'>Thông kê</h1>
+      <h1 className='text-2xl font-bold mb-4'>Thống kê</h1>
 
       <div className='flex flex-col sm:flex-row gap-4 mb-6'>
         <div className='flex flex-col'>
@@ -129,23 +122,16 @@ function Statistics() {
         </div>
       </div>
 
-      <div className='mb-6'>
-        <h2 className='text-xl font-semibold mb-2'>Revenue</h2>
-        {isLoadingMonth ? (
-          <div>loading...</div>
-        ) : (
-          <Bar data={revenueData} options={{ responsive: true }} />
-        )}
-      </div>
-
       <div className='grid gap-4'>
         <div className='p-4 bg-white shadow rounded'>
-          <h3 className='text-lg font-medium'>Total Order</h3>
+          <h3 className='text-lg font-medium'>Tổng đơn hàng</h3>
           <p className='text-2xl font-bold'>{statisticDay?.totalOrders}</p>
         </div>
         <div className='p-4 bg-white shadow rounded'>
-          <h3 className='text-lg font-medium'>Total Sales</h3>
-          <p className='text-2xl font-bold'>{statisticDay?.totalRevenue}</p>
+          <h3 className='text-lg font-medium'>Doanh thu</h3>
+          <p className='text-2xl font-bold'>
+            {formatVND(statisticDay?.totalRevenue)}
+          </p>
         </div>
       </div>
     </div>

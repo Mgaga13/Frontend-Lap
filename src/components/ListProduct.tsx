@@ -10,7 +10,7 @@ const ListProduct = () => {
   const { search, setTotalCart } = useContext(SearchContext);
   const router = useNavigate();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(16);
   const [filters, setFilters] = useState({
     category: "",
     brand: "",
@@ -44,14 +44,14 @@ const ListProduct = () => {
     if (newPage > 0 && newPage <= data?.meta?.pageCount) {
       setPage(newPage);
 
-      // Cuộn lên trên một khoảng 680px
-      window.scrollBy({
-        top: -720, // Cuộn lên trên 680px
-        behavior: "smooth",
-      });
+      // // Cuộn lên trên một khoảng 680px
+      // window.scrollBy({
+      //   top: -720, // Cuộn lên trên 680px
+      //   behavior: "smooth",
+      // });
 
-      // Kiểm tra cuộn
-      console.log("Scrolling up by 680px");
+      // // Kiểm tra cuộn
+      // console.log("Scrolling up by 680px");
     }
   };
 
@@ -77,14 +77,13 @@ const ListProduct = () => {
         </h2>
       </div>
 
-      {/* Danh sách sản phẩm */}
-      <div className='container mx-auto px-4 py-8 h-[860px]'>
+      <div className='container mx-auto px-4 py-8 '>
         {isLoading ? (
           <p className='text-center'>Loading...</p>
         ) : isEmpty ? (
           <p className='text-center'>No products found.</p>
         ) : (
-          <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 '>
+          <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 '>
             {products.map((product: any) => (
               <ProductCard key={product.id} product={product} />
             ))}

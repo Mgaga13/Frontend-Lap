@@ -8,37 +8,52 @@ import Modal from "../Modal";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
 import { formatVND } from "../../utils/formatprice";
+import { set } from "ramda";
 
 const ORDER_STATUSES = [
   { value: 0, label: "Pending" },
-  { value: 2, label: "Delivery" },
-  { value: 3, label: "Success" },
+  { value: 1, label: "Delivery" },
+  { value: 2, label: "Success" },
 ];
 
+const getStatusClass = (value: any) => {
+  switch (value) {
+    case 0:
+      return "text-yellow-500"; // Pending
+    case 1:
+      return "text-blue-500"; // Delivery
+    case 2:
+      return "text-green-500"; // Success
+    default:
+      return "text-gray-500"; // Unknown
+  }
+};
+const getStatusLabel = (value: any) => {
+  const status = ORDER_STATUSES.find((status) => status.value === value);
+  return status ? status.label : "Unknown";
+};
 const OrderAdmin = () => {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
-  const [formData, setFormData] = useState({ status: 0 });
+  const [status, setStatus] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingOrderId, setEditingOrderId] = useState<number | null>(null);
+  const [editingOrderDetailId, setEditingOrderDetailId] = useState<
+    string | null
+  >(null);
 
   const {
     data: listData,
     isLoading,
     refetch,
-  } = useGetListOrder({
-    page,
-    limit,
-  });
+  } = useGetListOrder({ page, limit });
 
   const { mutate: editOrder } = useEditOrder();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!editingOrderId) return;
-
+    if (!editingOrderDetailId) return;
     editOrder(
-      { id: editingOrderId, ...formData },
+      { orderId: editingOrderDetailId, status: status },
       {
         onSuccess: () => {
           toast.success("Order updated successfully!");
@@ -56,18 +71,19 @@ const OrderAdmin = () => {
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setStatus(parseInt(value));
   };
 
-  const handleEdit = (order: any) => {
-    setFormData({ status: order.status });
-    setEditingOrderId(order.id);
+  const handleEdit = (orderDetail: any) => {
+    console.log(orderDetail);
+    setStatus(orderDetail.status);
+    setEditingOrderDetailId(orderDetail.id);
     setIsModalOpen(true);
   };
 
   const resetForm = () => {
-    setFormData({ status: 0 });
-    setEditingOrderId(null);
+    setStatus(0);
+    setEditingOrderDetailId(null);
     setIsModalOpen(false);
   };
 
@@ -99,16 +115,19 @@ const OrderAdmin = () => {
                   <thead>
                     <tr>
                       <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase'>
-                        Địa chỉ
+                        Tên khách hàng
                       </th>
                       <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase'>
-                        Số tiền
+                        Tên sản phẩm
+                      </th>
+                      <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase'>
+                        Tổng tiền
                       </th>
                       <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase'>
                         Trạng thái
                       </th>
                       <th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase'>
-                        Hành động
+                        Actions
                       </th>
                     </tr>
                   </thead>
@@ -116,14 +135,20 @@ const OrderAdmin = () => {
                     {listData?.datas.map((order: any) => (
                       <tr key={order.id}>
                         <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
-                          {order.address}
+                          {order.order?.user?.name ?? ""}
+                        </td>
+                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                          {order.product?.name ?? ""}
                         </td>
                         <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
                           {formatVND(order.price)}
                         </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-                          {ORDER_STATUSES.find((s) => s.value === order.status)
-                            ?.label || "Unknown"}
+                        <td
+                          className={`px-6 py-4 whitespace-nowrap text-sm ${getStatusClass(
+                            order.status
+                          )}`}
+                        >
+                          {getStatusLabel(order.status)}
                         </td>
                         <td className='px-6 py-4 whitespace-nowrap text-right text-sm'>
                           <button
@@ -193,7 +218,7 @@ const OrderAdmin = () => {
         <form onSubmit={handleSubmit} className='grid gap-4'>
           <select
             name='status'
-            value={formData.status}
+            value={status}
             onChange={handleChange}
             className='p-2 border rounded'
             required

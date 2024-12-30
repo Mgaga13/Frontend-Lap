@@ -17,7 +17,7 @@ const EditProduct = () => {
     id: "",
     name: "",
     price: 0,
-    oldPrice: 0,
+    oldprice: 0,
     description: "",
     quantity: 0,
     specification: "",
@@ -51,7 +51,7 @@ const EditProduct = () => {
         id: productData.id,
         name: productData.name,
         price: productData.price,
-        oldPrice: productData.oldPrice,
+        oldprice: productData.oldprice,
         description: productData.description,
         quantity: productData.quantity,
         specification: productData.specification,
@@ -238,8 +238,8 @@ const EditProduct = () => {
               </label>
               <input
                 type='number'
-                name='oldPrice'
-                value={formData.oldPrice}
+                name='oldprice'
+                value={formData.oldprice}
                 onChange={handleInputChange}
                 step='0.01'
                 min='0'
@@ -279,7 +279,7 @@ const EditProduct = () => {
                   htmlFor='file-upload'
                   className='cursor-pointer py-2 px-3 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50'
                 >
-                  Select Images
+                  Chọn ảnh
                 </label>
               </div>
             </div>
@@ -301,7 +301,7 @@ const EditProduct = () => {
           </div>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              Description*
+              Mô tả*
             </label>
             <textarea
               name='description'
@@ -315,7 +315,7 @@ const EditProduct = () => {
               } px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500`}
             />
             <p className='mt-1 text-sm text-gray-500'>
-              {formData.description.length}/5000 characters
+              {formData.description.length}
             </p>
             {errors.description && (
               <p className='mt-1 text-sm text-red-500'>{errors.description}</p>
@@ -323,40 +323,37 @@ const EditProduct = () => {
           </div>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              specification*
+              Thông số kỹ thuật*
             </label>
             <textarea
               name='specification'
               value={formData.specification}
               onChange={handleInputChange}
-              maxLength={5000}
               rows={4}
               placeholder='Enter product specification'
               className={`mt-1 block w-full rounded-md border ${
                 errors.specification ? "border-red-500" : "border-gray-300"
               } px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500`}
             />
-            <p className='mt-1 text-sm text-gray-500'>
-              {formData?.specification?.length}/5000 characters
-            </p>
             {errors.specification && (
               <p className='mt-1 text-sm text-red-500'>
                 {errors.specification}
               </p>
             )}
-            <p>Specification Old</p>
+            <p>Thông số kỹ thuật cũ</p>
             <p className='mt-2 text-xs text-gray-500'>
               <pre className='bg-gray-100 p-4 rounded-md'>
                 <code className='text-xs text-gray-800'>
-                  {oldSpecification && oldSpecification}
-                  {/* {JSON.parse()} */}
+                  {oldSpecification
+                    ? JSON.stringify(oldSpecification, null, 2)
+                    : ""}
                 </code>
               </pre>
             </p>
           </div>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              Quantity*
+              Số lượng*
             </label>
             <input
               type='number'
@@ -380,7 +377,7 @@ const EditProduct = () => {
               type='submit'
               className='w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
             >
-              Update Product
+              Chỉnh sửa sản phẩm
             </button>
           </div>
         </form>
