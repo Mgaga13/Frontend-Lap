@@ -105,7 +105,9 @@ const AuthForm = () => {
     setShowPassword(!showPassword);
   };
   useEffect(() => {
-    setIsLogin(!isLogin);
+    if (registerSuc) {
+      setIsLogin(!isLogin);
+    }
   }, [registerSuc]);
 
   return (

@@ -21,7 +21,6 @@ const Header = () => {
   }, [count]);
   useEffect(() => {
     refetch();
-    console.log("Refetching cart count");
   }, [isSuccess]);
   const handleLogout = () => {
     UserSlice.setIsLoggedIn(false);
@@ -122,7 +121,11 @@ const Header = () => {
               className='relative p-2 text-gray-600 hover:text-gray-900'
               aria-label='Shopping cart'
               onClick={() => {
-                router("/cart");
+                if (!UserSlice.isLoggedIn) {
+                  router("/sign-in");
+                } else {
+                  router("/cart");
+                }
               }}
             >
               <FiShoppingCart className='h-6 w-6' />

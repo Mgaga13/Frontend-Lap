@@ -4,15 +4,16 @@ import {
   useGetListCart,
   useRemoveCart,
 } from "../../services/react-query/query/cart"; // API hook
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CartSummary from "../../components/CartSummary"; // Import component tóm tắt đơn hàng
 import { formatVND } from "../../utils/formatprice";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
+  const router = useNavigate();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(20);
   const [selectedItems, setSelectedItems] = useState<number[]>([]); // Thêm state để theo dõi item được chọn
-
   const {
     data: ListCart,
     isLoading,
