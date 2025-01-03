@@ -11,9 +11,9 @@ import { formatVND } from "../../utils/formatprice";
 import { set } from "ramda";
 
 const ORDER_STATUSES = [
-  { value: 0, label: "Pending" },
-  { value: 1, label: "Delivery" },
-  { value: 2, label: "Success" },
+  { value: 0, label: "Đang xử lý" },
+  { value: 1, label: "Đang vận chuyển" },
+  { value: 2, label: "Thành công" },
 ];
 
 const getStatusClass = (value: any) => {
@@ -103,11 +103,11 @@ const OrderAdmin = () => {
       <div className='max-w-6xl mx-auto'>
         <div className='bg-white rounded-lg shadow-lg p-6'>
           <h1 className='text-2xl font-bold text-gray-800 mb-6'>
-            Order Management
+            Quản lý đơn hàng
           </h1>
 
           {isLoading ? (
-            <p>Loading...</p>
+            <p>Đang tải...</p>
           ) : (
             <>
               <div className='overflow-x-auto'>

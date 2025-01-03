@@ -20,3 +20,23 @@ export const useCreatePayment = () => {
     }
   );
 };
+
+export const useCreateCod = () => {
+  const paymentService = ApiService.createInstance();
+  return useMutation(
+    (payload: any) => {
+      return paymentService.createPaymentCod({
+        data: {
+          amount: 10000,
+          cartItem: payload.cartItem,
+        },
+      });
+    },
+    {
+      onSuccess: (data: any) => {
+        console.log("data from category", data);
+      },
+      onError: (error: any) => {},
+    }
+  );
+};

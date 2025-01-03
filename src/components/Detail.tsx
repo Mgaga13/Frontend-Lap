@@ -151,12 +151,12 @@ const ProductDetail = ({ product }: any) => {
               onClick={() => console.log("Added to cart:", title)}
             >
               <FaShoppingCart className='text-lg' />
-              Add to Cart
+              Thêm vào giỏ hàng
             </button>
           </div>
 
           <div className='border-t pt-6'>
-            <h3 className='text-lg font-semibold mb-4'>Specifications</h3>
+            <h3 className='text-lg font-semibold mb-4'>Thông số kỹ thuật</h3>
             <div className='grid grid-cols-2 gap-4'>
               {specifications.map((spec, index) => (
                 <div key={index} className='flex justify-between'>

@@ -314,9 +314,6 @@ const EditProduct = () => {
                 errors.description ? "border-red-500" : "border-gray-300"
               } px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500`}
             />
-            <p className='mt-1 text-sm text-gray-500'>
-              {formData.description.length}
-            </p>
             {errors.description && (
               <p className='mt-1 text-sm text-red-500'>{errors.description}</p>
             )}

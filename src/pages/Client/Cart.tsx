@@ -7,9 +7,11 @@ import {
 import { useEffect, useState } from "react";
 import CartSummary from "../../components/CartSummary"; // Import component tóm tắt đơn hàng
 import { formatVND } from "../../utils/formatprice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Cart = () => {
+  const [selectedTotalPrice, setSelectedTotalPrice] = useState(0);
+
   const router = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
@@ -25,16 +27,27 @@ const Cart = () => {
   });
   const { mutate: updateQuantityCart } = useEditCart();
   const { mutate: removeItemCart } = useRemoveCart();
+  useEffect(() => {
+    const total = ListCart?.datas[0]?.cartItems?.reduce(
+      (sum: number, item: any) =>
+        selectedItems.includes(item.id)
+          ? sum + item.product.price * item.quantity
+          : sum,
+      0
+    );
+    setSelectedTotalPrice(total || 0); // Đặt giá trị mặc định là 0 nếu `total` là undefined
+  }, [selectedItems, ListCart]);
 
-  const totalPrice = () => {
+  const TotalPrice = () => {
     return ListCart?.datas[0]?.cartItems?.reduce(
       (total: number, item: any) =>
-        selectedItems.includes(item.id) // Chỉ tính những sản phẩm được chọn
+        selectedItems.includes(item.id)
           ? total + item.product.price * item.quantity
           : total,
       0
     );
   };
+
   const handelRemove = (item: any) => {
     if (item) {
       removeItemCart(
@@ -85,23 +98,34 @@ const Cart = () => {
     }
   };
 
-  const toggleSelectItem = (itemId: number) => {
+  const toggleSelectItem = (item: any) => {
+    console.log("hay vao day", item.product.price * item.quantity);
     setSelectedItems(
       (prevSelectedItems) =>
-        prevSelectedItems.includes(itemId)
-          ? prevSelectedItems.filter((id) => id !== itemId) // Bỏ chọn nếu đã chọn
-          : [...prevSelectedItems, itemId] // Thêm vào danh sách chọn
+        prevSelectedItems.includes(item.id)
+          ? prevSelectedItems.filter((id) => id !== item.id) // Bỏ chọn nếu đã chọn
+          : [...prevSelectedItems, item.id] // Thêm vào danh sách chọn
     );
   };
-
   return (
-    <div className='min-h-screen bg-gray-100 pt-20'>
+    <div className='min-h-screen bg-gray-100 pt-5'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         <h1 className='text-3xl font-bold text-gray-900 mb-8'>Giỏ Hàng</h1>
 
         <div className='flex flex-col lg:flex-row gap-8'>
           <div className='lg:w-2/3'>
             <div className='bg-white rounded-lg shadow'>
+              {ListCart?.datas[0]?.cartItems.length === 0 ? (
+                <div className='h-[450px] flex justify-center items-center'>
+                  <div className='flex flex-col items-center'>
+                    <div className='text-blue-500'>
+                      <Link to='/'>Mua sắm sản phẩm ngay</Link>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
               {ListCart?.datas[0]?.cartItems?.map((item: any) => (
                 <div
                   key={item.id}
@@ -110,8 +134,8 @@ const Cart = () => {
                   <div className='flex items-center'>
                     <input
                       type='checkbox'
-                      checked={selectedItems.includes(item.id)} // Kiểm tra xem sản phẩm có được chọn không
-                      onChange={() => toggleSelectItem(item.id)} // Thay đổi trạng thái chọn
+                      checked={selectedItems.includes(item.id)}
+                      onChange={() => toggleSelectItem(item)}
                       className='mr-4'
                     />
                     <img
@@ -142,6 +166,9 @@ const Cart = () => {
                         <span className='ml-4 text-gray-500'>
                           {formatVND(item.product.price)}
                         </span>
+                        <span className='ml-4 text-gray-500'>
+                          {formatVND(item.product.price * item.quantity)}
+                        </span>
                       </div>
                     </div>
                     <div className='ml-6'>
@@ -160,7 +187,10 @@ const Cart = () => {
           </div>
 
           <div className='lg:w-1/3'>
-            <CartSummary subtotal={totalPrice()} cartItem={selectedItems} />
+            <CartSummary
+              subtotal={selectedTotalPrice}
+              cartItem={selectedItems}
+            />
           </div>
         </div>
       </div>

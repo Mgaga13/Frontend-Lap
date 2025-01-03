@@ -28,13 +28,12 @@ ChartJS.register(
 );
 const getStartAndEndDate = (year: any) => {
   const startDate = `${year}-01-01`;
-  const endDate = `${year}-12-31`;
+  const endDate = `${year + 1}-01-01`;
   return { startDate, endDate };
 };
 const Dashboard = () => {
-  const currentYear = new Date().getFullYear(); // Năm hiện tại
-  const { startDate, endDate } = getStartAndEndDate(currentYear); // Ngày bắt đầu và kết thúc năm hiện tại
-
+  const currentYear = new Date().getFullYear();
+  const { startDate, endDate } = getStartAndEndDate(currentYear);
   const { data: statisticDay, refetch } = getStatisticRevenue({
     startDate,
     endDate,
@@ -121,7 +120,7 @@ const Dashboard = () => {
         <div className='mb-6'>
           <h2 className='text-xl font-semibold mb-2'>Doanh thu 12 tháng</h2>
           {isLoadingMonth ? (
-            <div>loading...</div>
+            <div>Đang tải...</div>
           ) : (
             <div style={{ width: "900px", height: "600px", margin: "0 auto" }}>
               <Bar data={revenueData} options={{ responsive: true }} />

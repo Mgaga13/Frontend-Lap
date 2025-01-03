@@ -89,7 +89,7 @@ const ChangePassword = () => {
         {
           onSuccess: () => {
             toast.done("Reset Password Success");
-            router("/sign-in");
+            router("/login");
           },
         }
       );
@@ -102,7 +102,7 @@ const ChangePassword = () => {
         {
           onSuccess: () => {
             toast.done("Change Password Success");
-            router("/sign-in");
+            router("/login");
           },
         }
       );

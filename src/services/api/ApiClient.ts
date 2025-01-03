@@ -383,6 +383,14 @@ export class ApiService {
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
+  createPaymentCod = configApi({
+    path: "v1/payment/create-cod",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
   // checkPaymentZaloPay = configApi({
   //   path: "v1/cart/user/count",
   //   method: "GET",

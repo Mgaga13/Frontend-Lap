@@ -1,6 +1,11 @@
 import React from "react";
-import { useCreatePayment } from "../services/react-query/query/payment";
+import {
+  useCreateCod,
+  useCreatePayment,
+} from "../services/react-query/query/payment";
 import { formatVND } from "../utils/formatprice";
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 interface CartSummaryProps {
   subtotal: number;
@@ -8,19 +13,57 @@ interface CartSummaryProps {
 }
 
 const CartSummary: React.FC<CartSummaryProps> = ({ subtotal, cartItem }) => {
+  const router = useNavigate();
   const { mutate: createPaymentZalo } = useCreatePayment();
+  const { mutate: createCod } = useCreateCod();
   const createPayment = () => {
-    createPaymentZalo(
-      {
-        cartItem: cartItem,
-      },
-      {
-        onSuccess: (data) => {
-          location.href = data.order_url;
+    if (cartItem.length === 0) {
+      toast.info("Vui lòng chọn sản phẩm để thanh toán");
+    } else {
+      createPaymentZalo(
+        {
+          cartItem: cartItem,
         },
-      }
-    );
+        {
+          onSuccess: (data) => {
+            location.href = data.order_url;
+          },
+          onError: () => {
+            toast.error(
+              "Sản phẩm không đủ số lượng mua vui lòng chọn lại số lượng"
+            );
+          },
+        }
+      );
+    }
   };
+
+  const handleCashOnDelivery = () => {
+    // Logic cho Thanh toán khi nhận hàng
+    if (cartItem.length === 0) {
+      toast.info("Vui lòng chọn sản phẩm để thanh toán");
+    } else {
+      createCod(
+        {
+          cartItem: cartItem,
+        },
+        {
+          onSuccess: (data) => {
+            toast.success(
+              "Đơn hàng của bạn đã được ghi nhận, vui lòng thanh toán khi nhận hàng!"
+            );
+            // router("/user/order");
+          },
+          onError: () => {
+            toast.error(
+              "Sản phẩm không đủ số lượng mua vui lòng chọn lại số lượng"
+            );
+          },
+        }
+      );
+    }
+  };
+
   return (
     <div className='bg-white rounded-lg shadow p-6'>
       <h2 className='text-lg font-medium text-gray-900 mb-4'>
@@ -45,7 +88,14 @@ const CartSummary: React.FC<CartSummaryProps> = ({ subtotal, cartItem }) => {
         >
           Thanh toán
         </button>
+        <button
+          onClick={handleCashOnDelivery}
+          className='w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors duration-200 mt-4'
+        >
+          Thanh toán khi nhận hàng
+        </button>
       </div>
+      <ToastContainer position='top-center' autoClose={5000} />
     </div>
   );
 };

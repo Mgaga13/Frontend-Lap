@@ -20,15 +20,15 @@ export const useEditOrder = () => {
   );
 };
 export const useGetListOrder = (params: any) => {
-  const getProductService = ApiService.createInstance();
+  const getOrderService = ApiService.createInstance();
   return useQuery(
-    ["getListProduct", params.page],
+    ["getListOrder", params.page],
     () => {
       const queryParams: any = {
         page: params.page,
         limit: params.limit,
       };
-      return getProductService.getListOrder({
+      return getOrderService.getListOrder({
         queryParams,
       });
     },

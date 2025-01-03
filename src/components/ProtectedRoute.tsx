@@ -10,7 +10,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   const accessToken = localStorage.getItem("data");
 
   if (!accessToken) {
-    return <Navigate to='/sign-in' />;
+    return <Navigate to='/login' />;
   }
 
   const decoded = jwtDecode<CustomJwtPayload>(accessToken);

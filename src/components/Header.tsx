@@ -109,7 +109,7 @@ const Header = () => {
               </div>
             ) : (
               <Link
-                to='/sign-in'
+                to='/login'
                 className='flex items-center text-gray-600 hover:text-gray-900'
                 aria-label='User account'
               >
@@ -122,7 +122,7 @@ const Header = () => {
               aria-label='Shopping cart'
               onClick={() => {
                 if (!UserSlice.isLoggedIn) {
-                  router("/sign-in");
+                  router("/login");
                 } else {
                   router("/cart");
                 }

@@ -10,7 +10,6 @@ import UserAdmin from "./components/admin/User-Admin";
 import ProductAdmin from "./components/admin/Product-admin";
 import CategoryAdmin from "./components/admin/Category-admin";
 import Statistics from "./components/admin/Statistics";
-import AuthForm from "./pages/Auth/AuthForm";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreateProducts from "./components/admin/Create-products";
 import EditProduct from "./components/admin/Edit-product";
@@ -23,6 +22,8 @@ import OrderHistory from "./components/OrderHistory";
 import OrderAdmin from "./components/admin/Order-admin";
 import ScrollToTop from "./components/hooks/ccrollToTop";
 import Dashboard from "./components/Dashboard";
+import LoginForm from "./pages/Auth/LoginForm";
+import RegisterForm from "./pages/Auth/RegisterForm";
 function App() {
   return (
     <>
@@ -80,7 +81,8 @@ function App() {
             </Layout>
           }
         />
-        <Route path='/sign-in' element={<AuthForm />} />
+        <Route path='/login' element={<LoginForm />} />
+        <Route path='/register' element={<RegisterForm />} />
         <Route path='/reset-password' element={<ForgetPassword />} />
       </Routes>
     </>

@@ -5,6 +5,12 @@ import { useGetListOrderUser } from "../services/react-query/query/user";
 import { formatVND } from "../utils/formatprice";
 import { useCreateFeedback } from "../services/react-query/query/feedback";
 
+function statusOrder(status: number) {
+  if (status == 0) return "Xử lý";
+  if (status == 1) return "Đang vận chuyển";
+  if (status == 2) return "Thành công";
+}
+
 const OrderHistory = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -39,7 +45,7 @@ const OrderHistory = () => {
 
   return (
     <div className='p-6 content'>
-      <h1 className='text-2xl font-bold mb-4'>Lịch Sử Mua Hàng</h1>
+      <h1 className='text-2xl font-bold mb-4'>Lịch Sử Giao dịch</h1>
       <div className='space-y-4'>
         {listOrder?.datas?.map((order: any) => (
           <div key={order.id} className='border rounded-lg shadow-md'>
@@ -53,7 +59,10 @@ const OrderHistory = () => {
                   Thông tin đơn hàng
                 </span>
                 <span className='block text-gray-600'>
-                  Hình thức thanh toán: {order.paymentMethod}
+                  Hình thức thanh toán:{" "}
+                  {order.paymentMethod === "COD"
+                    ? "Thanh toán khi nhận hàng"
+                    : "Thanh toán online"}
                 </span>
                 <span className='text-sm text-gray-600'>
                   Ngày tạo: {new Date(order.createdAt).toLocaleDateString()}
@@ -82,19 +91,22 @@ const OrderHistory = () => {
                           Sản phẩm: {detail.product.name}
                         </span>
                         <span className='block font-medium'>
-                          Trạng thái:{" "}
-                          {detail.status == 0 ? "Xử lý" : "Thành Công"}
+                          Trạng thái: {statusOrder(detail.status)}
                         </span>
                         <span className='text-sm text-gray-600'>
                           Giá: {formatVND(detail.price)}
                         </span>
                       </div>
-                      <button
-                        onClick={() => handleRating(detail.product.id)}
-                        className='bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600'
-                      >
-                        Đánh giá
-                      </button>
+                      {detail.status == 2 ? (
+                        <button
+                          onClick={() => handleRating(detail.product.id)}
+                          className='bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600'
+                        >
+                          Đánh giá
+                        </button>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   ))
                 ) : (

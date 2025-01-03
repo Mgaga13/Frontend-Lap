@@ -93,13 +93,13 @@ export const UserProfile = () => {
 
     editUser(formDataToSend, {
       onSuccess: () => {
-        toast.success("Profile updated successfully!");
+        toast.success("Hồ sơ cập nhật thành công!");
         refetch(); // Optionally refetch profile data
         setIsSubmitting(false);
       },
       onError: (error: any) => {
         toast.error(
-          error?.response?.data?.message || "Failed to update profile"
+          error?.response?.data?.message || "Thất bại khi cập nhật hồ sơ"
         );
         setIsSubmitting(false);
       },
