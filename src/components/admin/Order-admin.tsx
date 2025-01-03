@@ -198,7 +198,7 @@ const OrderAdmin = () => {
                   disabled={page === 1}
                   className='px-3 py-2 rounded-md text-sm bg-white text-gray-700 hover:bg-gray-50'
                 >
-                  First
+                  Trang đầu
                 </button>
                 <button
                   onClick={() => handlePageChange(page - 1)}
@@ -234,7 +234,7 @@ const OrderAdmin = () => {
                   disabled={page === listData?.meta?.pageCount}
                   className='px-3 py-2 rounded-md text-sm bg-white text-gray-700 hover:bg-gray-50'
                 >
-                  Last
+                  Trang cuối
                 </button>
               </nav>
             </>

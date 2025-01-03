@@ -25,6 +25,7 @@ import Dashboard from "./components/Dashboard";
 import LoginForm from "./pages/Auth/LoginForm";
 import RegisterForm from "./pages/Auth/RegisterForm";
 import PaymentFailed from "./pages/Client/PaymentFailed";
+import NotFound from "./components/NotFound";
 function App() {
   return (
     <>
@@ -82,6 +83,7 @@ function App() {
                   path='/user/reset-password'
                   element={<ChangePassword />}
                 />
+                <Route path='*' element={<NotFound />} />
               </Routes>
             </Layout>
           }

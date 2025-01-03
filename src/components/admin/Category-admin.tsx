@@ -190,7 +190,7 @@ function CategoryAdmin() {
               }`}
               aria-label='Go to first page'
             >
-              First
+              Trang đầu
             </button>
 
             <button
@@ -204,7 +204,7 @@ function CategoryAdmin() {
               aria-label='Previous page'
             >
               <FaChevronLeft className='h-4 w-4' />
-              <span className='ml-1'>Previous</span>
+              <span className='ml-1'>Lùi Trang</span>
             </button>
 
             <div className='hidden sm:flex space-x-2'>
@@ -237,7 +237,7 @@ function CategoryAdmin() {
                     }`}
                     aria-label='Next page'
                   >
-                    <span className='mr-1'>Next</span>
+                    <span className='mr-1'>Trang tiếp</span>
                     <FaChevronRight className='h-4 w-4' />
                   </button>
 

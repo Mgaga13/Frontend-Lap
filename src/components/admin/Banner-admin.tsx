@@ -130,7 +130,7 @@ const BannerAdmin = () => {
           </div>
           <form onSubmit={handleSubmit} className='space-y-6'>
             <div>
-              <label className='block text-gray-700 mb-2'>Image</label>
+              <label className='block text-gray-700 mb-2'>Ảnh</label>
               <input
                 type='file'
                 name='avatar'
@@ -189,7 +189,7 @@ const BannerAdmin = () => {
                         : "bg-green-100 text-green-800"
                     }`}
                   >
-                    {banner.isDeleted ? "inactive" : "active"}
+                    hoạt động
                   </span>
                 </div>
                 <p className='text-gray-600 mb-4'>{banner.content}</p>

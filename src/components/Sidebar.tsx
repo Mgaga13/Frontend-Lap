@@ -52,13 +52,13 @@ const Sidebar = () => {
           <li className='px-4 py-3 hover:bg-gray-700 cursor-pointer flex items-center'>
             <FaUser className='mr-3' />
             <Link to='/dashboard/users' className={`${!isOpen && "hidden"}`}>
-              Users
+              Người dùng
             </Link>
           </li>
           <li className='px-4 py-3 hover:bg-gray-700 cursor-pointer flex items-center'>
             <FaProductHunt className='mr-3' />
             <Link to='/dashboard/products' className={`${!isOpen && "hidden"}`}>
-              Products
+              Sản phẩm
             </Link>
           </li>
           <li className='px-4 py-3 hover:bg-gray-700 cursor-pointer flex items-center'>
@@ -67,32 +67,32 @@ const Sidebar = () => {
               to='/dashboard/categories'
               className={`${!isOpen && "hidden"}`}
             >
-              Categories
+              Thể loại
             </Link>
           </li>
 
           <li className='px-4 py-3 hover:bg-gray-700 cursor-pointer flex items-center'>
             <FaListAlt className='mr-3' />
             <Link to='/dashboard/order' className={`${!isOpen && "hidden"}`}>
-              Order
+              Đơn hàng
             </Link>
           </li>
           <li className='px-4 py-3 hover:bg-gray-700 cursor-pointer flex items-center'>
             <FaImage className='mr-3' />
             <Link to='/dashboard/banner' className={`${!isOpen && "hidden"}`}>
-              Banners
+              Quảng cáo
             </Link>
           </li>
           <li className='px-4 py-3 hover:bg-gray-700 cursor-pointer flex items-center'>
             <FaImage className='mr-3' />
             <Link to='/dashboard/brand' className={`${!isOpen && "hidden"}`}>
-              Brand
+              Nhãn hàng
             </Link>
           </li>
           <li className='px-4 py-3 hover:bg-gray-700 cursor-pointer flex items-center'>
             <FaChartBar className='mr-3' />
             <Link to='/dashboard/reports' className={`${!isOpen && "hidden"}`}>
-              Reports
+              Thống kê
             </Link>
           </li>
         </ul>
@@ -101,7 +101,7 @@ const Sidebar = () => {
       {/* Sidebar Footer */}
       <div className='p-4 text-center border-t border-gray-700'>
         {isOpen && (
-          <span className='text-sm text-gray-400'>© 2024 Admin Dashboard</span>
+          <span className='text-sm text-gray-400'>© 2024 Quản lý</span>
         )}
       </div>
     </aside>

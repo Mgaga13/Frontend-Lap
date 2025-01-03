@@ -386,7 +386,7 @@ export class ApiService {
   });
 
   createPaymentZaloPay = configApi({
-    path: "v1/payment/create",
+    path: "v1/payment/create_payment_url",
     method: "POST",
     headers: {
       "Content-Type": "application/json",

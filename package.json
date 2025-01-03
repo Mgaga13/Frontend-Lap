@@ -17,6 +17,7 @@
     "@nestjs/mapped-types": "*",
     "@tanstack/react-query": "^4.15.1",
     "@tanstack/react-query-devtools": "^4.16.1",
+    "@types/file-saver": "^2.0.7",
     "@types/lodash.debounce": "^4.0.9",
     "@types/react-syntax-highlighter": "^15.5.13",
     "axios": "^1.7.9",

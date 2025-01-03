@@ -4,12 +4,14 @@ import {
   useGetListCart,
   useRemoveCart,
 } from "../../services/react-query/query/cart"; // API hook
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import CartSummary from "../../components/CartSummary"; // Import component tóm tắt đơn hàng
 import { formatVND } from "../../utils/formatprice";
 import { Link, useNavigate } from "react-router-dom";
+import { SearchContext } from "../../components/Layout";
 
 const Cart = () => {
+  const { setTotalCart } = useContext(SearchContext);
   const [selectedTotalPrice, setSelectedTotalPrice] = useState(0);
 
   const router = useNavigate();
@@ -38,15 +40,15 @@ const Cart = () => {
     setSelectedTotalPrice(total || 0); // Đặt giá trị mặc định là 0 nếu `total` là undefined
   }, [selectedItems, ListCart]);
 
-  const TotalPrice = () => {
-    return ListCart?.datas[0]?.cartItems?.reduce(
-      (total: number, item: any) =>
-        selectedItems.includes(item.id)
-          ? total + item.product.price * item.quantity
-          : total,
-      0
-    );
-  };
+  // const TotalPrice = () => {
+  //   return ListCart?.datas[0]?.cartItems?.reduce(
+  //     (total: number, item: any) =>
+  //       selectedItems.includes(item.id)
+  //         ? total + item.product.price * item.quantity
+  //         : total,
+  //     0
+  //   );
+  // };
 
   const handelRemove = (item: any) => {
     if (item) {
@@ -57,6 +59,7 @@ const Cart = () => {
         },
         {
           onSuccess: () => {
+            setTotalCart((prev: number) => prev - 1);
             refetch();
           },
         }

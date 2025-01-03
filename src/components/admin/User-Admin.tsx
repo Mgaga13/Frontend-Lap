@@ -53,8 +53,12 @@ function UserAdmin() {
   });
   const [editingUserId, setEditingUserId] = useState(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value, files } = e.target as HTMLInputElement & {
+      files: FileList | null;
+    };
 
     if (name === "avatar" && files) {
       const file = files[0];
@@ -179,13 +183,13 @@ function UserAdmin() {
         <div className='bg-white rounded-lg shadow-lg p-6'>
           <div className='flex flex-col sm:flex-row justify-between items-center mb-6'>
             <h1 className='text-2xl font-bold text-gray-800 mb-4 sm:mb-0'>
-              User Management
+              Quản lý người dùng
             </h1>
             <button
               onClick={openModal}
               className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors'
             >
-              Add New User
+              Thêm mới người dùng
             </button>
           </div>
 
@@ -279,7 +283,7 @@ function UserAdmin() {
               }`}
               aria-label='Go to first page'
             >
-              First
+              Trang đầu
             </button>
 
             <button
@@ -293,7 +297,7 @@ function UserAdmin() {
               aria-label='Previous page'
             >
               <FaChevronLeft className='h-4 w-4' />
-              <span className='ml-1'>Previous</span>
+              <span className='ml-1'>Lùi trang</span>
             </button>
 
             <div className='hidden sm:flex space-x-2'>
@@ -326,7 +330,7 @@ function UserAdmin() {
                     }`}
                     aria-label='Next page'
                   >
-                    <span className='mr-1'>Next</span>
+                    <span className='mr-1'>Trang tiếp</span>
                     <FaChevronRight className='h-4 w-4' />
                   </button>
 
@@ -340,11 +344,11 @@ function UserAdmin() {
                     }`}
                     aria-label='Go to last page'
                   >
-                    Last
+                    Trang cuối
                   </button>
 
                   <div className='flex items-center text-sm text-gray-500 ml-4'>
-                    Page {page} of {listData.meta.pageCount}
+                    Trang {page} trong {listData.meta.pageCount}
                   </div>
                 </>
               )}
@@ -354,7 +358,7 @@ function UserAdmin() {
       </div>
 
       <Modal
-        title={editingUserId ? "Edit User" : "Add New User"}
+        title={editingUserId ? "Sửa" : "Thêm mới"}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       >
@@ -368,15 +372,20 @@ function UserAdmin() {
             className='p-2 border rounded'
             required
           />
-          <input
-            type='text'
+          {/* Thay input bằng select */}
+          <select
             name='role'
-            placeholder='Role'
             value={formData?.role || ""}
             onChange={handleChange}
             className='p-2 border rounded'
             required
-          />
+          >
+            <option value='' disabled>
+              Select Role
+            </option>
+            <option value='Admin'>Admin</option>
+            <option value='User'>User</option>
+          </select>
           <input
             type='text'
             name='name'

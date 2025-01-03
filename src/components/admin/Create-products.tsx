@@ -107,7 +107,7 @@ const CreateProducts = () => {
     // Gọi API gửi form
     createProduct(formDataToSubmit, {
       onSuccess: () => {
-        toast.success("Product added successfully!");
+        toast.success("Thêm mới sản phẩm thành công!");
         setFormData({
           name: "",
           price: 0,

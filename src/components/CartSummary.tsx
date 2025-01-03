@@ -33,7 +33,8 @@ const CartSummary: React.FC<CartSummaryProps> = ({
         },
         {
           onSuccess: (data) => {
-            location.href = data.order_url;
+            console.log(data);
+            location.href = data.paymentUrl;
           },
           onError: () => {
             toast.error(

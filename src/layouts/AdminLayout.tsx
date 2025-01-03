@@ -38,7 +38,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               onClick={handleLogout}
             >
               <FaSignOutAlt />
-              <span className='hidden sm:inline'>Logout</span>
+              <span className='hidden sm:inline'>Đăng xuất</span>
             </button>
           </div>
         </header>

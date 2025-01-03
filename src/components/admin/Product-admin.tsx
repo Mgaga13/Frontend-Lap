@@ -201,7 +201,7 @@ function ProductAdmin() {
               }`}
               aria-label='Go to first page'
             >
-              First
+              Trang đầu
             </button>
 
             <button
@@ -215,7 +215,7 @@ function ProductAdmin() {
               aria-label='Previous page'
             >
               <FaChevronLeft className='h-4 w-4' />
-              <span className='ml-1'>Previous</span>
+              <span className='ml-1'>Lùi Trang</span>
             </button>
 
             <div className='hidden sm:flex space-x-2'>
@@ -248,7 +248,7 @@ function ProductAdmin() {
                     }`}
                     aria-label='Next page'
                   >
-                    <span className='mr-1'>Next</span>
+                    <span className='mr-1'>Tiến Trang</span>
                     <FaChevronRight className='h-4 w-4' />
                   </button>
 
@@ -262,11 +262,11 @@ function ProductAdmin() {
                     }`}
                     aria-label='Go to last page'
                   >
-                    Last
+                    Trang cuối
                   </button>
 
                   <div className='flex items-center text-sm text-gray-500 ml-4'>
-                    Page {page} of {listData.meta.pageCount}
+                    Trang {page} trong {listData.meta.pageCount}
                   </div>
                 </>
               )}

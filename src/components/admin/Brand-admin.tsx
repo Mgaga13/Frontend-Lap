@@ -187,7 +187,7 @@ function BrandAdmin() {
               }`}
               aria-label='Go to first page'
             >
-              First
+              Trang đầu
             </button>
 
             <button
@@ -201,7 +201,7 @@ function BrandAdmin() {
               aria-label='Previous page'
             >
               <FaChevronLeft className='h-4 w-4' />
-              <span className='ml-1'>Previous</span>
+              <span className='ml-1'>Lùi trang</span>
             </button>
 
             <div className='hidden sm:flex space-x-2'>
@@ -234,7 +234,7 @@ function BrandAdmin() {
                     }`}
                     aria-label='Next page'
                   >
-                    <span className='mr-1'>Next</span>
+                    <span className='mr-1'>Tiến trang</span>
                     <FaChevronRight className='h-4 w-4' />
                   </button>
 

@@ -128,7 +128,7 @@ const ListProduct = () => {
             }`}
             aria-label='Go to first page'
           >
-            First
+            Trang đầu
           </button>
 
           <button
@@ -142,7 +142,7 @@ const ListProduct = () => {
             aria-label='Previous page'
           >
             <FaChevronLeft className='h-4 w-4' />
-            <span className='ml-1'>Previous</span>
+            <span className='ml-1'>Lùi trang</span>
           </button>
 
           {pages.map((pageNumber) => (
@@ -168,7 +168,7 @@ const ListProduct = () => {
                 : "bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
-            <span className='mr-1'>Next</span>
+            <span className='mr-1'>Tiến trang</span>
             <FaChevronRight className='h-4 w-4' />
           </button>
         </nav>
