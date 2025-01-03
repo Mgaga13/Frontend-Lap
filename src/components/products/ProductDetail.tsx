@@ -35,8 +35,8 @@ const ProductDetail = () => {
     description,
     specification,
     feedbacks,
+    quantity,
   } = productData;
-
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     e.currentTarget.src =
       "https://images.unsplash.com/photo-1595341888016-a392ef81b7de";
@@ -117,13 +117,30 @@ const ProductDetail = () => {
             <span>Thêm vào giỏ hàng</span>
           </button>
         </div>
+        <div className='mt-4'>
+          {quantity > 0 ? (
+            <p
+              className={`text-sm font-medium ${
+                quantity < 5 ? "text-red-500" : "text-green-600"
+              }`}
+            >
+              {quantity < 5
+                ? `Chỉ còn ${quantity} sản phẩm trong kho!`
+                : `${quantity} sản phẩm`}
+            </p>
+          ) : (
+            <p className='text-sm font-medium text-red-600'>
+              Sản phẩm hiện đã hết hàng.
+            </p>
+          )}
+        </div>
         <div className='mt-8'>
           <h3 className='text-2xl font-bold text-gray-800 mb-4'>
             Thông số kỹ thuật
           </h3>
           <div className='grid grid-cols-2 gap-4'>
             {specification
-              ? Object?.entries(specification)?.map(
+              ? Object?.entries(JSON.parse(specification))?.map(
                   ([label, value]: any, index) => (
                     <div key={index} className='bg-gray-50 p-4 rounded-lg'>
                       <h4 className='font-semibold text-gray-800'>{label}</h4>

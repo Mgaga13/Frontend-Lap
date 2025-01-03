@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import {
   useEditOrder,
@@ -35,6 +35,7 @@ const getStatusLabel = (value: any) => {
 const OrderAdmin = () => {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
+  const [statusFilter, setStatusFilter] = useState(-1); // -1: Không lọc
   const [status, setStatus] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingOrderDetailId, setEditingOrderDetailId] = useState<
@@ -45,23 +46,32 @@ const OrderAdmin = () => {
     data: listData,
     isLoading,
     refetch,
-  } = useGetListOrder({ page, limit });
+  } = useGetListOrder({ page, limit, status: statusFilter });
 
   const { mutate: editOrder } = useEditOrder();
 
+  const handleStatusFilterChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setStatusFilter(parseInt(e.target.value));
+  };
+
+  useEffect(() => {
+    refetch();
+  }, [statusFilter]);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!editingOrderDetailId) return;
     editOrder(
-      { orderId: editingOrderDetailId, status: status },
+      { orderId: editingOrderDetailId, status },
       {
         onSuccess: () => {
-          toast.success("Order updated successfully!");
+          toast.success("Trạng thái đơn hàng đã được cập nhật.");
           resetForm();
           refetch();
         },
         onError: () => {
-          toast.error("Failed to update the order.");
+          toast.error("Lỗi khi cập nhật trạng thái.");
         },
       }
     );
@@ -75,7 +85,6 @@ const OrderAdmin = () => {
   };
 
   const handleEdit = (orderDetail: any) => {
-    console.log(orderDetail);
     setStatus(orderDetail.status);
     setEditingOrderDetailId(orderDetail.id);
     setIsModalOpen(true);
@@ -105,6 +114,25 @@ const OrderAdmin = () => {
           <h1 className='text-2xl font-bold text-gray-800 mb-6'>
             Quản lý đơn hàng
           </h1>
+
+          <div className='mb-4'>
+            <label htmlFor='statusFilter' className='mr-2 text-gray-700'>
+              Lọc theo trạng thái:
+            </label>
+            <select
+              id='statusFilter'
+              value={statusFilter}
+              onChange={handleStatusFilterChange}
+              className='p-2 border rounded'
+            >
+              <option value='-1'>Tất cả</option>
+              {ORDER_STATUSES.map((status) => (
+                <option key={status.value} value={status.value}>
+                  {status.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {isLoading ? (
             <p>Đang tải...</p>

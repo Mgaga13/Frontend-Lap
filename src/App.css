@@ -1,9 +1,7 @@
-
-
 a {
   text-decoration: none;
 }
-.content{
+.content {
   width: 1110px;
   max-width: calc(100% - 48px);
   margin-left: auto;
@@ -21,8 +19,8 @@ a {
   margin-left: 50px;
 }
 .navbar .action {
-  display:flex;
-  align-items:center;
+  display: flex;
+  align-items: center;
   column-gap: 8px;
   margin-left: auto;
 }
@@ -38,4 +36,7 @@ a {
   align-items: center;
   font-weight: 500;
   font-size: 1.4rem;
+}
+.scroll-container {
+  scroll-behavior: smooth; /* Mượt mà khi cuộn */
 }

@@ -24,6 +24,7 @@ import ScrollToTop from "./components/hooks/ccrollToTop";
 import Dashboard from "./components/Dashboard";
 import LoginForm from "./pages/Auth/LoginForm";
 import RegisterForm from "./pages/Auth/RegisterForm";
+import PaymentFailed from "./pages/Client/PaymentFailed";
 function App() {
   return (
     <>
@@ -69,6 +70,10 @@ function App() {
                 {/* <Route path='/test' element={<SalesPage />} /> */}
                 <Route path='/user/profile' element={<UserProfile />} />
                 <Route path='/payment/payment-success' element={<Checkout />} />
+                <Route
+                  path='/payment/payment-failed'
+                  element={<PaymentFailed />}
+                />
                 <Route
                   path='/user/change-password'
                   element={<ChangePassword />}

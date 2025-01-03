@@ -103,9 +103,6 @@ const EditProduct = () => {
     if (!formData.quantity || formData.quantity <= 0) {
       newErrors.quantity = "Valid quantity is required";
     }
-    if (!formData.description.trim()) {
-      newErrors.description = "Description is required";
-    }
     return newErrors;
   };
 
@@ -128,10 +125,13 @@ const EditProduct = () => {
     Object.entries(formData).forEach(([key, value]) => {
       formDataToSubmit.append(key, value as string | Blob);
     });
-
+    for (let pair of formDataToSubmit.entries()) {
+      console.log(pair[0] + ", " + pair[1]);
+    }
+    console.log("formDataToSubmit", formDataToSubmit);
     updateProduct(formDataToSubmit, {
       onSuccess: () => {
-        toast.success("Product updated successfully!");
+        toast.success("Cập nhật sản phẩm thành công!");
         route("/dashboard/products");
       },
     });
@@ -213,14 +213,13 @@ const EditProduct = () => {
           <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
             <div>
               <label className='block text-sm font-medium text-gray-700'>
-                Giá*
+                Giá
               </label>
               <input
                 type='number'
                 name='price'
                 value={formData.price}
                 onChange={handleInputChange}
-                step='0.01'
                 min='0'
                 placeholder='0.00'
                 className={`mt-1 block w-full rounded-md border ${
@@ -241,16 +240,15 @@ const EditProduct = () => {
                 name='oldprice'
                 value={formData.oldprice}
                 onChange={handleInputChange}
-                step='0.01'
                 min='0'
-                placeholder='0.00'
+                placeholder='0'
                 className='mt-1 block w-full rounded-md  border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
               />
             </div>
           </div>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              Ảnh sản phẩm*
+              Ảnh sản phẩm
             </label>
             <div
               className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md ${
@@ -301,7 +299,7 @@ const EditProduct = () => {
           </div>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              Mô tả*
+              Mô tả
             </label>
             <textarea
               name='description'
@@ -320,7 +318,7 @@ const EditProduct = () => {
           </div>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
-              Thông số kỹ thuật*
+              Thông số kỹ thuật
             </label>
             <textarea
               name='specification'
@@ -337,17 +335,8 @@ const EditProduct = () => {
                 {errors.specification}
               </p>
             )}
-            <p>Thông số kỹ thuật cũ</p>
-            <p className='mt-2 text-xs text-gray-500'>
-              <pre className='bg-gray-100 p-4 rounded-md'>
-                <code className='text-xs text-gray-800'>
-                  {oldSpecification
-                    ? JSON.stringify(oldSpecification, null, 2)
-                    : ""}
-                </code>
-              </pre>
-            </p>
           </div>
+
           <div>
             <label className='block text-sm font-medium text-gray-700'>
               Số lượng*

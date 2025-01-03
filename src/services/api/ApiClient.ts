@@ -194,6 +194,16 @@ export class ApiService {
       Authorization: `Bearer ${this.getAccessToken()}`,
     },
   });
+
+  // 5 sản phẩm bán chạy nhất
+  getTop5SellProduct = configApi({
+    path: "v1/product/top-selling",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    },
+  });
   createProduct = configApi({
     path: "v1/product",
     method: "POST",

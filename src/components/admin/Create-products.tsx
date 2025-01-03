@@ -312,21 +312,13 @@ const CreateProducts = () => {
                 {errors.specification}
               </p>
             )}
+            <p>Định dạng thông số kỹ thuật gửi lên,ví dụ:</p>
             <p className='mt-2 text-xs text-gray-500'>
               <pre className='bg-gray-100 p-4 rounded-md'>
                 <code className='text-xs text-gray-800'>
                   {`{
   "Tương thích": "Windows",
   "Cách kết nối": "Wired-Detachable Type-C",
-  "Độ dài dây / Khoảng cách kết nối": "2.01 m",
-  "Loại switch": "Razer Linear Optical",
-  "Kiểu bàn phím": "Tenkeyless (Rút gọn)",
-  "Số phím": "87 phím",
-  "Chất liệu keycaps": "PBT",
-  "Đèn LED": "RGB",
-  "Phần mềm hỗ trợ": "Razer Synapse",
-  "Kích thước": "Dài 36.5 cm - Rộng 13.5 cm - Cao 1.9 cm - Nặng 1 kg",
-  "Sản xuất tại": "Trung Quốc"
 }`}
                 </code>
               </pre>

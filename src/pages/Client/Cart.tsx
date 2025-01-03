@@ -190,6 +190,8 @@ const Cart = () => {
             <CartSummary
               subtotal={selectedTotalPrice}
               cartItem={selectedItems}
+              setCartItem={setSelectedItems}
+              refetch={refetch}
             />
           </div>
         </div>

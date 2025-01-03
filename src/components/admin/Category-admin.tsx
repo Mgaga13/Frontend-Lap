@@ -49,7 +49,7 @@ function CategoryAdmin() {
         { id: editingUserId, name: name },
         {
           onSuccess: () => {
-            toast.success("Category Edit successfully!");
+            toast.success("Câp nhật thành công");
             resetForm();
             setIsModalOpen(false);
           },
@@ -60,7 +60,7 @@ function CategoryAdmin() {
         { name },
         {
           onSuccess: () => {
-            toast.success("Category added successfully!");
+            toast.success("Thêm mới thành công");
             resetForm();
             setIsModalOpen(false);
           },

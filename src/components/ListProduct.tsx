@@ -4,8 +4,13 @@ import ProductCard from "./ProductCard";
 import FilterBar from "./FilterBar";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useGetProductAll } from "../services/react-query/query/product";
+import {
+  useGetProductAll,
+  useGetTopFiveSellProduct,
+} from "../services/react-query/query/product";
 import { SearchContext } from "./Layout";
+import TopSellCard from "./TopSellCard";
+import TopSellingProducts from "./TopSellCard";
 
 const ListProduct = () => {
   const { search, setTotalCart } = useContext(SearchContext);
@@ -48,6 +53,8 @@ const ListProduct = () => {
     brandId: filters.brand,
     sortPrice: filters.priceRange,
   });
+  const { data: topFiveSellProduct, isLoading: loadingTopFive } =
+    useGetTopFiveSellProduct({ limit: 7 });
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= data?.meta?.pageCount) {
@@ -59,6 +66,7 @@ const ListProduct = () => {
     { length: data?.meta?.pageCount ?? 1 },
     (_, i) => i + 1
   );
+  const isEmptySellProduct = topFiveSellProduct?.length === 0;
 
   const products = data?.datas || [];
   const isEmpty = products.length === 0;
@@ -68,11 +76,27 @@ const ListProduct = () => {
       <aside className='lg:col-span-1'>
         <FilterBar onFilter={handleFilterChange} />
       </aside>
+      <div className='mx-auto max-w-7xl mt-8'>
+        <h4 className='font-manrope font-bold text-3xl min-[400px]:text-2xl text-black mb-8 max-lg:text-center'>
+          Sản phẩm bán chạy
+        </h4>
+      </div>
+      {loadingTopFive ? (
+        <p className='text-center h-96'>loading ....</p>
+      ) : isEmptySellProduct ? (
+        <p className='text-center'>No products found.</p>
+      ) : (
+        <>
+          <TopSellingProducts
+            topFiveSellProduct={topFiveSellProduct}
+          ></TopSellingProducts>
+        </>
+      )}
 
       <div className='mx-auto max-w-7xl mt-8'>
-        <h2 className='font-manrope font-bold text-3xl min-[400px]:text-4xl text-black mb-8 max-lg:text-center'>
-          Sản phẩm
-        </h2>
+        <h4 className='font-manrope font-bold text-3xl min-[400px]:text-2xl text-black mb-8 max-lg:text-center'>
+          Danh sách các sản phẩm
+        </h4>
       </div>
 
       <div className='container mx-auto px-4 py-8 '>

@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useLogin } from "../../services/react-query/query/user";
 import { Link, useNavigate } from "react-router-dom";
 
+import { jwtDecode } from "jwt-decode";
+import { useStore } from "../../store";
+
 const LoginForm = () => {
+  const { UserSlice } = useStore();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<any>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -15,7 +19,17 @@ const LoginForm = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((prev: any) => ({ ...prev, [name]: "" }));
   };
-
+  useEffect(() => {
+    if (UserSlice.isLoggedIn) {
+      const accessToken = localStorage.getItem("data") ?? "";
+      const decode = jwtDecode<any>(accessToken);
+      if (decode?.role !== "Admin") {
+        navigate("/");
+      } else {
+        navigate("/dashboard");
+      }
+    }
+  }, [UserSlice.isLoggedIn]);
   const validateForm = () => {
     const newErrors: any = {};
     if (!formData.email.trim()) newErrors.email = "Yêu cầu email";
@@ -28,7 +42,9 @@ const LoginForm = () => {
     e.preventDefault();
     if (validateForm()) {
       login(formData, {
-        onSuccess: () => navigate("/"),
+        // onSuccess: () => {
+
+        // },
         onError: () => setErrors({ global: "Email hoặc mật khẩu không đúng" }),
       });
     }
@@ -73,7 +89,7 @@ const LoginForm = () => {
               <button
                 type='button'
                 onClick={() => setShowPassword(!showPassword)}
-                className='absolute right-3 top-2 text-gray-500'
+                className='absolute right-3 top-[0.8rem] text-gray-500'
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>

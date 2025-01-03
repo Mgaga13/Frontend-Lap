@@ -39,7 +39,26 @@ export const useGetListProduct = (params: List) => {
     }
   );
 };
+export const useGetTopFiveSellProduct = (params: { limit: any }) => {
+  const getProductService = ApiService.createInstance();
+  return useQuery(
+    ["getListTopProduct"],
+    () => {
+      const queryParams: any = {
+        limit: params.limit,
+      };
 
+      return getProductService.getTop5SellProduct({
+        queryParams,
+      });
+    },
+    {
+      onSuccess: () => {
+        // Xử lý thành công nếu cần thiết
+      },
+    }
+  );
+};
 export const useGetProduct = (params: any) => {
   const productService = ApiService.createInstance();
   return useQuery(

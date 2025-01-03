@@ -10,9 +10,16 @@ import { useNavigate } from "react-router-dom";
 interface CartSummaryProps {
   subtotal: number;
   cartItem: any;
+  refetch: any;
+  setCartItem: any;
 }
 
-const CartSummary: React.FC<CartSummaryProps> = ({ subtotal, cartItem }) => {
+const CartSummary: React.FC<CartSummaryProps> = ({
+  subtotal,
+  cartItem,
+  refetch,
+  setCartItem,
+}) => {
   const router = useNavigate();
   const { mutate: createPaymentZalo } = useCreatePayment();
   const { mutate: createCod } = useCreateCod();
@@ -52,6 +59,8 @@ const CartSummary: React.FC<CartSummaryProps> = ({ subtotal, cartItem }) => {
             toast.success(
               "Đơn hàng của bạn đã được ghi nhận, vui lòng thanh toán khi nhận hàng!"
             );
+            setCartItem([]);
+            refetch();
             // router("/user/order");
           },
           onError: () => {

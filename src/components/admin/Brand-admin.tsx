@@ -46,7 +46,7 @@ function BrandAdmin() {
         { id: editingBrandId, name: name },
         {
           onSuccess: () => {
-            toast.success("Category Edit successfully!");
+            toast.success("Cập nhật thành công");
             resetForm();
             setIsModalOpen(false);
           },
@@ -57,7 +57,7 @@ function BrandAdmin() {
         { name },
         {
           onSuccess: () => {
-            toast.success("Category added successfully!");
+            toast.success("Thêm mới thành công");
             resetForm();
             setIsModalOpen(false);
           },

@@ -276,7 +276,7 @@ function ProductAdmin() {
       </div>
       {isDeleteConfirmOpen && (
         <DeleteConfirmation
-          message='Bạn có muốn xóa người dùng này không?'
+          message='Bạn có muốn xóa sản phẩm này không?'
           onConfirm={confirmDelete}
           onCancel={cancelDelete}
         />

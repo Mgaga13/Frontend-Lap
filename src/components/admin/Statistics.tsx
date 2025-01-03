@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Bar, Pie } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,13 +8,11 @@ import {
   Title,
   Tooltip,
   Legend,
-  ArcElement,
 } from "chart.js";
-import {
-  getStatisticRevenue,
-  getStatisticSelling,
-} from "../../services/react-query/query/statistic";
+import { getStatisticRevenue } from "../../services/react-query/query/statistic";
 import { formatVND } from "../../utils/formatprice";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 ChartJS.register(
   CategoryScale,
@@ -22,8 +20,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend,
-  ArcElement
+  Legend
 );
 
 function Statistics() {
@@ -39,50 +36,69 @@ function Statistics() {
     startDate,
     endDate,
   });
-  const { data: statisticTopSell, refetch: topQuatitySell } =
-    getStatisticSelling({
-      limit: 5,
-      startDate,
-      endDate,
-    });
+
   useEffect(() => {
     refetch();
-    topQuatitySell();
   }, [startDate, endDate]);
 
-  const labelSalesProduct = statisticTopSell?.map((value: any) =>
-    value.productName.length > 50
-      ? value.productName.substring(0, 50) + "..."
-      : value.productName
-  );
-  const dataSalesProduct = statisticTopSell?.map(
-    (value: any) => value.totalQuantity
-  );
-
-  const productSalesData = {
-    labels: labelSalesProduct,
+  // Dữ liệu cho biểu đồ cột
+  const chartData = {
+    labels: [statisticDay?.totalOrders], // Các nhãn
     datasets: [
       {
-        label: "Products Sold",
-        data: dataSalesProduct,
-        backgroundColor: [
-          "rgba(75, 192, 192, 0.6)",
-          "rgba(255, 99, 132, 0.6)",
-          "rgba(255, 206, 86, 0.6)",
-          "rgba(54, 162, 235, 0.6)",
-          "rgba(153, 102, 255, 0.6)",
-        ],
-        borderColor: [
-          "rgba(75, 192, 192, 1)",
-          "rgba(255, 99, 132, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(153, 102, 255, 1)",
-        ],
+        label: "Thống kê",
+        data: [statisticDay?.totalRevenue], // Dữ liệu
+        backgroundColor: "rgba(75, 192, 192, 0.2)", // Màu nền của cột
+        borderColor: "rgba(75, 192, 192, 1)", // Màu viền của cột
         borderWidth: 1,
       },
     ],
   };
+
+  // Cấu hình cho biểu đồ
+  const options = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Thống kê đơn hàng và doanh thu",
+      },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => {
+            if (context.dataset.label === "Thống kê") {
+              return context.raw !== null ? formatVND(context.raw) : "";
+            }
+            return context.raw;
+          },
+        },
+      },
+    },
+  };
+
+  // Xử lý xuất Excel
+  const exportToExcel = () => {
+    const data = [
+      {
+        "Ngày bắt đầu": startDate,
+        "Ngày kết thúc": endDate,
+        "Tổng đơn hàng": statisticDay?.totalOrders,
+        "Doanh thu": statisticDay ? formatVND(statisticDay.totalRevenue) : "0",
+      },
+    ];
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Statistics");
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, `Statistics_${startDate}_to_${endDate}.xlsx`);
+  };
+
   return (
     <div className='p-6 bg-gray-100'>
       <h1 className='text-2xl font-bold mb-4'>Thống kê</h1>
@@ -115,11 +131,17 @@ function Statistics() {
         </div>
       </div>
 
-      <div className='mb-6'>
-        <h2 className='text-xl font-semibold mb-2'>Sản phẩm bán chạy</h2>
-        <div style={{ width: "400px", height: "400px", margin: "0 auto" }}>
-          <Pie data={productSalesData} options={{ responsive: true }} />
-        </div>
+      {/* Nút xuất Excel */}
+      <button
+        onClick={exportToExcel}
+        className='mb-6 bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600'
+      >
+        Xuất Excel
+      </button>
+
+      {/* Hiển thị biểu đồ cột */}
+      <div className='mb-6' style={{ maxWidth: "600px", margin: "0 auto" }}>
+        <Bar data={chartData} options={options} />
       </div>
 
       <div className='grid gap-4'>

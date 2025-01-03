@@ -88,7 +88,7 @@ function UserAdmin() {
     if (editingUserId) {
       editUser(formDataToSubmit, {
         onSuccess: () => {
-          toast.success("User Edit successfully!");
+          toast.success("Cập nhật người dùng thành công!");
           resetForm();
           setIsModalOpen(false);
         },
@@ -96,7 +96,7 @@ function UserAdmin() {
     } else {
       createUser(formDataToSubmit, {
         onSuccess: () => {
-          toast.success("User added successfully!");
+          toast.success("Tạo tài khoản thành công!");
           resetForm();
           setIsModalOpen(false);
         },
@@ -393,7 +393,7 @@ function UserAdmin() {
             value={formData?.phone || ""}
             onChange={handleChange}
             className='p-2 border rounded'
-            required
+            required={!editingUserId}
           />
           {editingUserId ? (
             ""

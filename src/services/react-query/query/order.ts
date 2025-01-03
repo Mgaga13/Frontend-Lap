@@ -24,9 +24,11 @@ export const useGetListOrder = (params: any) => {
   return useQuery(
     ["getListOrder", params.page],
     () => {
+      console.log(params);
       const queryParams: any = {
         page: params.page,
         limit: params.limit,
+        status: params.status === -1 ? "all" : params.status,
       };
       return getOrderService.getListOrder({
         queryParams,

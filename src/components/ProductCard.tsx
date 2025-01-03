@@ -59,7 +59,7 @@ const ProductCard = ({ product }: any) => {
       </div>
 
       <div className='p-4'>
-        <h2 className='text-gray-600 text-sm mb-4 text-ellipsis h-14 overflow-hidden line-clamp-3'>
+        <h2 className='text-gray-600 text-sm text-ellipsis h-14'>
           {products_name}
         </h2>
 
@@ -75,7 +75,7 @@ const ProductCard = ({ product }: any) => {
             />
           ))}
           <span className='ml-2 text-gray-600'>
-            ({averageRating.toFixed(1)})
+            ({Number(averageRating).toFixed(1)})
           </span>
         </div>
 
